@@ -753,7 +753,7 @@
         <div class="stats">
             <div class="stat-item">
                 <div class="stat-label">Раунд</div>
-                <div class="stat-value" id="round">0/5</div>
+                <div class="stat-value" id="round">0/15</div>
             </div>
             <div class="stat-item">
                 <div class="stat-label">Время</div>
@@ -921,6 +921,82 @@ const magic = data
   return 'PROFIT!';
 }`,
                 difficulty: 3
+            },
+            {
+                code: `const { name, age } = user;
+console.log(\`\${name}: \${age}\`);`,
+                difficulty: 3.5
+            },
+            {
+                code: `const arr = [1, 2, 3];
+const newArr = [...arr, 4, 5];`,
+                difficulty: 3.5
+            },
+            {
+                code: `const sql = \`
+  SELECT * FROM users
+  WHERE active = true
+  LIMIT 10;
+\`;`,
+                difficulty: 4
+            },
+            {
+                code: `const sum = [1, 2, 3, 4].reduce(
+  (acc, n) => acc + n,
+  0
+);`,
+                difficulty: 4
+            },
+            {
+                code: `fetch('/api/data')
+  .then(r => r.json())
+  .then(data => console.log(data))
+  .catch(err => console.error(err));`,
+                difficulty: 4.5
+            },
+            {
+                code: `function Button({ text, onClick }) {
+  return (
+    <button onClick={onClick}>
+      {text}
+    </button>
+  );
+}`,
+                difficulty: 4.5
+            },
+            {
+                code: `interface User {
+  id: number;
+  name: string;
+  email?: string;
+}`,
+                difficulty: 5
+            },
+            {
+                code: `async function loadData() {
+  try {
+    const res = await fetch('/api');
+    return await res.json();
+  } catch (e) {
+    console.error(e);
+  }
+}`,
+                difficulty: 5
+            },
+            {
+                code: `const user = {
+  name: 'Dev',
+  greet() {
+    return \`Hello, \${this.name}!\`;
+  }
+};`,
+                difficulty: 5.5
+            },
+            {
+                code: `const multiply = (x) => (y) => x * y;
+const double = multiply(2);
+console.log(double(5)); // 10`,
+                difficulty: 6
             }
         ];
 
