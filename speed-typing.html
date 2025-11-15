@@ -1,0 +1,3443 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>СКОРОСТНОЙ НАБОР | MWS Code Challenge ⚡</title>
+    <style>
+        /* MTS Fonts */
+        @font-face {
+            font-family: 'MTS Compact';
+            src: url('fonts/MTSCompact-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'MTS Compact';
+            src: url('fonts/MTSCompact-Medium.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'MTS Text';
+            src: url('fonts/MTSText-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'MTS Wide';
+            src: url('fonts/MTSWide-Medium.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'MTS Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: white;
+            color: #333;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .video-background video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(255, 240, 245, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 2px solid rgba(255, 0, 50, 0.4);
+            box-shadow: 0 4px 30px rgba(255, 0, 50, 0.15);
+        }
+
+        .logo svg {
+            width: 51px;
+            height: 51px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            font-family: 'MTS Compact', sans-serif;
+            font-weight: 500;
+            color: #cc0028;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-family: 'MTS Compact', sans-serif;
+            font-weight: 500;
+            color: #ff0032;
+            font-variant-numeric: tabular-nums;
+            min-width: 70px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .drink-icon {
+            font-size: 32px;
+            transition: all 0.3s ease;
+        }
+
+        .drink-icon-locked {
+            filter: grayscale(100%);
+            opacity: 0.3;
+        }
+
+        .drink-icon-unlocked {
+            filter: none;
+            opacity: 1;
+            animation: drinkPulse 1s ease-in-out;
+        }
+
+        @keyframes drinkPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 30px 20px 30px;
+            height: calc(100vh - 90px);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .game-title {
+            text-align: center;
+            margin-bottom: 15px;
+            margin-top: 30px;
+        }
+
+        .game-title h1 {
+            font-size: 36px;
+            font-family: 'MTS Wide', sans-serif;
+            font-weight: 500;
+            color: #ff0032;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .game-title p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .code-display {
+            background: #f8f8f8;
+            border: 3px solid #ff0032;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 20px rgba(255, 0, 50, 0.15);
+        }
+
+        .code-label {
+            font-size: 14px;
+            font-family: 'MTS Compact', sans-serif;
+            font-weight: 500;
+            color: #ff0032;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .code-target {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 20px;
+            line-height: 1.6;
+            color: #333;
+            white-space: pre;
+            padding: 20px;
+            background: #fff5f8;
+            border-radius: 5px;
+            border: 2px solid rgba(255, 0, 50, 0.2);
+        }
+
+        .editor-container {
+            border: 3px solid #ff0032;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(255, 0, 50, 0.15);
+            margin-bottom: 15px;
+        }
+
+        #editor {
+            height: 250px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 14px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            font-family: 'MTS Compact', sans-serif;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .btn-primary {
+            background: #ff0032;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(255, 0, 50, 0.2);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #ff0032;
+            border: 2px solid #ff0032;
+        }
+
+        .btn-secondary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(255, 0, 50, 0.15);
+        }
+
+        .btn-secondary:active {
+            transform: scale(0.98);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .language-dropdown {
+            padding: 14px 16px;
+            font-size: 15px;
+            font-family: 'MTS Compact', sans-serif;
+            font-weight: 500;
+            background: white;
+            color: #333;
+            border: 2px solid #ff0032;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            outline: none;
+            min-width: 180px;
+        }
+
+        .language-dropdown:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(255, 0, 50, 0.15);
+        }
+
+        .language-dropdown:focus {
+            transform: scale(1.02);
+            box-shadow: 0 0 0 3px rgba(255, 0, 50, 0.2);
+        }
+
+        .language-dropdown:active {
+            transform: scale(0.98);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #ffe0e8;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 0, 50, 0.3);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0032, #ff3355);
+            transition: width 0.3s;
+        }
+
+        .instructions {
+            background: rgba(255, 245, 248, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 3px solid rgba(255, 0, 50, 0.5);
+            color: #333;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 30px rgba(255, 0, 50, 0.2);
+        }
+
+        .instructions h2 {
+            font-size: 32px;
+            font-family: 'MTS Wide', sans-serif;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: #ff0032;
+        }
+
+        .instructions p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .final-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .final-screen.show {
+            display: flex;
+        }
+
+        .final-screen-content {
+            background: #fff5f8;
+            border: 4px solid #ff0032;
+            border-radius: 15px;
+            padding: 50px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 8px 40px rgba(255, 0, 50, 0.4);
+            text-align: center;
+        }
+
+        .final-screen h2 {
+            font-size: 42px;
+            font-family: 'MTS Wide', sans-serif;
+            font-weight: 500;
+            color: #ff0032;
+            margin-bottom: 30px;
+        }
+
+        .final-stats {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .final-stat-card {
+            background: #ffe8ef;
+            padding: 20px 30px;
+            border-radius: 10px;
+            min-width: 150px;
+            border: 2px solid rgba(255, 0, 50, 0.2);
+        }
+
+        .final-stat-label {
+            font-size: 14px;
+            font-family: 'MTS Compact', sans-serif;
+            font-weight: 500;
+            color: #cc0028;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .final-stat-value {
+            font-size: 36px;
+            font-family: 'MTS Compact', sans-serif;
+            font-weight: 500;
+            color: #ff0032;
+        }
+
+        .drink-status {
+            margin: 40px 0;
+        }
+
+        .drink-result {
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        #drinkUnlocked {
+            background: linear-gradient(135deg, #00cc66 0%, #00994d 100%);
+        }
+
+        #drinkLocked {
+            background: #f5f5f5;
+        }
+
+        .drink-icon-large {
+            font-size: 80px;
+            margin-bottom: 15px;
+            animation: drinkPulse 1.5s ease-in-out;
+        }
+
+        .drink-icon-large-gray {
+            font-size: 80px;
+            margin-bottom: 15px;
+            filter: grayscale(100%);
+            opacity: 0.3;
+        }
+
+        .drink-message {
+            font-size: 28px;
+            font-family: 'MTS Wide', sans-serif;
+            font-weight: 500;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        #drinkLocked .drink-message {
+            color: #333;
+        }
+
+        .drink-reason {
+            font-size: 16px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .final-message {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .finish-btn {
+            background: #ff0032;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'MTS Compact', sans-serif;
+            cursor: pointer;
+            transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            margin-left: 20px;
+        }
+
+        .finish-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(255, 0, 50, 0.2);
+        }
+
+        .finish-btn:active {
+            transform: scale(0.98);
+        }
+
+        .feedback {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            min-height: 30px;
+        }
+
+        .feedback.perfect {
+            color: #00cc66;
+        }
+
+        .feedback.good {
+            color: #ff9900;
+        }
+
+        .feedback.error {
+            color: #ff0032;
+        }
+
+        .pulse {
+            animation: pulse 0.5s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .shake {
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Cloud Architect game styles */
+        .service-block {
+            background: white;
+            border: 2px solid #ff0032;
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            cursor: move;
+            transition: all 0.3s;
+            font-size: 12px;
+            font-family: 'MTS Compact', sans-serif;
+            font-weight: 500;
+            color: #333;
+            text-align: center;
+        }
+
+        .service-block:hover {
+            background: #fff5f7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 0, 50, 0.2);
+        }
+
+        .service-block.dragging {
+            opacity: 0.5;
+        }
+
+        .dropped-block {
+            position: absolute;
+            background: white;
+            border: 3px solid #ff0032;
+            border-radius: 8px;
+            padding: 15px 20px;
+            cursor: move;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-family: 'MTS Compact', sans-serif;
+            font-weight: 500;
+            color: #333;
+            text-align: center;
+            min-width: 120px;
+            box-shadow: 0 2px 10px rgba(255, 0, 50, 0.15);
+        }
+
+        .dropped-block:hover {
+            box-shadow: 0 4px 15px rgba(255, 0, 50, 0.3);
+            z-index: 10;
+        }
+
+        .dropped-block:hover .connection-handle {
+            opacity: 1;
+        }
+
+        .dropped-block.selected {
+            border-color: #00cc66;
+            background: #f0fff7;
+        }
+
+        .dropped-block.connecting {
+            border-color: #ff9900;
+            background: #fff9f0;
+        }
+
+        .connection-handle {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #ff0032;
+            border: 2px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            pointer-events: all;
+            z-index: 100;
+        }
+
+        .connection-handle:hover {
+            transform: scale(1.3);
+            background: #00cc66;
+            opacity: 1 !important;
+        }
+
+        .connection-handle.handle-right {
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .connection-handle.handle-right:hover {
+            transform: translateY(-50%) scale(1.3);
+        }
+
+        .connection-handle.handle-left {
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .connection-handle.handle-left:hover {
+            transform: translateY(-50%) scale(1.3);
+        }
+
+        .connection-handle.handle-top {
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .connection-handle.handle-top:hover {
+            transform: translateX(-50%) scale(1.3);
+        }
+
+        .connection-handle.handle-bottom {
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .connection-handle.handle-bottom:hover {
+            transform: translateX(-50%) scale(1.3);
+        }
+
+        .connection-line {
+            stroke: #ff0032;
+            stroke-width: 3;
+            fill: none;
+            marker-end: url(#arrowhead);
+            cursor: pointer;
+            transition: stroke-width 0.2s;
+        }
+
+        .connection-line:hover {
+            stroke-width: 5;
+        }
+
+        .connection-line.valid {
+            stroke: #00cc66;
+        }
+
+        .connection-line.invalid {
+            stroke: #ff0032;
+            stroke-dasharray: 5, 5;
+        }
+
+        .delete-connection-btn {
+            position: absolute;
+            background: #ff0032;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s;
+            pointer-events: all;
+            z-index: 100;
+        }
+
+        .delete-connection-btn:hover {
+            background: #cc0028;
+            transform: scale(1.2);
+        }
+
+        .delete-block-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #ff0032;
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s;
+            pointer-events: all;
+            z-index: 101;
+            line-height: 1;
+        }
+
+        .dropped-block:hover .delete-block-btn {
+            display: flex;
+        }
+
+        .delete-block-btn:hover {
+            background: #cc0028;
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body oncopy="return false" oncut="return false" onpaste="return false">
+    <div class="video-background">
+        <video autoplay loop muted playsinline disablepictureinpicture
+               src="https://mws.ru/versions/release-frontend-2025-11-10-1/main-page-video.B6sSFcu0.mp4"
+               poster="https://mws.ru/versions/release-frontend-2025-11-10-1/main-page-poster.JRAOioNj.webp">
+        </video>
+    </div>
+
+    <div class="header">
+        <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="51" height="51" viewBox="0 0 51 51" fill="none">
+                <rect x="1" y="1" width="49" height="49" stroke="#FF0033" stroke-width="2"></rect>
+                <path d="M16.3025 5.61523L12.8476 12.7878L9.39396 5.61523H5.62109V16.461H8.26594V8.69809L11.6428 15.2562H14.0536L17.4305 8.69809V16.461H20.0753V5.61523H16.3025Z" fill="#FF0033"></path>
+                <path d="M44.063 5.61523L42.0565 13.6158L39.7117 5.61523H38.1781H38.1361H36.6024L34.2576 13.6158L32.2512 5.61523H29.4863L32.2656 16.461H35.7456L38.1565 8.27088L40.5685 16.461H44.0486L46.8266 5.61523H44.063Z" fill="#FF0033"></path>
+                <path d="M39.8293 38.8624C38.028 38.7316 36.4728 38.6176 36.4728 37.6468C36.4728 36.6004 37.5432 36.3951 39.3925 36.3951C40.9969 36.3951 42.1081 36.6124 42.3037 37.6624H45.347C45.137 35.3823 43.2421 34.3203 39.3913 34.3203C35.5404 34.3203 33.5304 35.4291 33.5304 37.7104C33.5304 40.5736 36.69 40.7944 39.2281 40.972C41.0329 41.098 42.5917 41.2072 42.5917 42.226C42.5917 43.3037 41.3785 43.5257 39.5557 43.5257C37.17 43.5257 36.5928 43.0085 36.396 42.052H33.3516C33.6024 44.5709 35.4048 45.6005 39.5557 45.6005C41.6389 45.6005 43.1197 45.3281 44.0833 44.7689C45.0698 44.1965 45.5486 43.3025 45.5486 42.0352C45.5486 39.28 42.3757 39.0484 39.8269 38.8624" fill="#FF0033"></path>
+            </svg>
+        </div>
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">Раунд</div>
+                <div class="stat-value" id="round">0/5</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Время</div>
+                <div class="stat-value" id="timer">0.0</div>
+            </div>
+        </div>
+        <button id="finishBtn" class="finish-btn" onclick="finishGame()" style="display: none;">Завершить ❌</button>
+    </div>
+
+    <div class="main-container">
+        <div id="gameArea" style="display: none;">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+
+            <div class="code-display">
+                <div class="code-label" id="codeLabel">Напечатайте этот код:</div>
+                <div class="code-target" id="targetCode"></div>
+            </div>
+
+            <div id="bugDescription" style="display: none; background: #fff3cd; border: 3px solid #ff0032; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                <div style="font-size: 14px; color: #ff0032; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">🐛 Описание бага:</div>
+                <div id="bugDescriptionText" style="font-size: 16px; color: #333; line-height: 1.6;"></div>
+            </div>
+
+            <div class="editor-container">
+                <div id="editor"></div>
+            </div>
+
+            <div class="feedback" id="feedback"></div>
+        </div>
+
+        <div id="startScreen" class="instructions">
+            <h2>СКОРОСТНОЙ НАБОР ⚡</h2>
+            <p style="font-size: 18px; margin: 20px 0; color: #555;">Активность для Рашеров. В ней придётся всё делать быстро, как в настоящей аркаде.</p>
+
+            <div style="margin-top: 40px;">
+                <button class="btn btn-primary" onclick="startTypingGame()" style="font-size: 18px; padding: 18px 36px;">
+                    Начать игру ⚡
+                </button>
+            </div>
+
+            <div style="margin-top: 30px; font-size: 14px; color: #777;">
+                <p>⏱ Время игры: 3 минуты</p>
+                <p>🎯 Задача: набрать максимум раундов</p>
+            </div>
+        </div>
+
+        <div id="architectArea" style="display: none;">
+            <div style="padding: 15px 30px;">
+                <div class="code-display" style="margin-bottom: 10px; padding: 12px;">
+                    <div class="code-label" style="color: #ff0032; font-size: 14px; margin-bottom: 6px;">🎯 Задача:</div>
+                    <div id="architectTask" style="font-size: 13px; line-height: 1.3; color: #333;"></div>
+                    <div id="architectRequirements" style="margin-top: 8px; padding: 8px; background: #f0f0f0; border-radius: 5px; font-size: 12px;"></div>
+                    <div id="attemptsDisplay" style="margin-top: 8px; padding: 8px; background: #fff3cd; border: 2px solid #ffc107; border-radius: 5px; font-size: 13px; font-weight: bold; text-align: center;"></div>
+                </div>
+
+                <div style="display: flex; gap: 15px; height: calc(100vh - 320px); max-height: 450px;">
+                    <div id="blockPanel" style="width: 180px; background: white; border: 3px solid #ff0032; border-radius: 10px; padding: 12px; overflow-y: auto;">
+                        <div style="font-size: 12px; color: #ff0032; font-weight: bold; margin-bottom: 10px; text-transform: uppercase;">Доступные блоки:</div>
+                        <div id="availableBlocks"></div>
+                    </div>
+
+                    <div style="flex: 1; position: relative;">
+                        <div id="canvas" style="width: 100%; height: 100%; background: white; border: 3px solid #ff0032; border-radius: 10px; position: relative; overflow: hidden;">
+                            <svg id="connectionsSvg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></svg>
+                            <div id="droppedBlocks" style="position: relative; width: 100%; height: 100%; z-index: 2;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="controls" style="margin-top: 10px; margin-bottom: 5px;">
+                    <button class="btn btn-primary" onclick="checkArchitecture()" id="checkBtn">Проверить</button>
+                    <button class="btn btn-secondary" onclick="clearCanvas()">Очистить</button>
+                    <button class="btn btn-secondary" onclick="showHint()" id="hintBtn">Подсказка</button>
+                </div>
+
+                <div class="feedback" id="architectFeedback" style="min-height: 25px;"></div>
+            </div>
+        </div>
+
+        <div id="bonusConfigArea" style="display: none;">
+            <div style="padding: 15px 30px;">
+                <div class="code-display" style="margin-bottom: 15px; padding: 15px; text-align: center;">
+                    <div style="font-size: 28px; color: #ff0032; font-weight: bold; margin-bottom: 10px;">🎁 БОНУСНЫЙ ЭТАП!</div>
+                    <div style="font-size: 16px; color: #666; margin-bottom: 8px;">Исправьте конфигурацию и получите +50% очков!</div>
+                    <div id="bonusHint" style="font-size: 14px; color: #333; background: #fff9e6; padding: 10px; border-radius: 5px; border: 1px solid #ffd700;"></div>
+                </div>
+
+                <div style="border: 3px solid #ff0032; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(255, 0, 50, 0.15); margin-bottom: 15px;">
+                    <div id="bonusEditor" style="height: 400px;"></div>
+                </div>
+
+                <div class="controls" style="margin-bottom: 10px;">
+                    <button class="btn btn-primary" onclick="checkBonusConfig()">Проверить конфиг 🔍</button>
+                    <button class="btn btn-secondary" onclick="skipBonus()">Пропустить</button>
+                </div>
+
+                <div class="feedback" id="bonusFeedback" style="min-height: 25px;"></div>
+            </div>
+        </div>
+
+        <div id="finalScreen" class="final-screen">
+            <div class="final-screen-content">
+                <h2 id="finalTitle">🎉 Игра завершена!</h2>
+
+                <!-- Results Summary -->
+                <div class="final-stats">
+                    <div class="final-stat-card">
+                        <div class="final-stat-label">Раундов завершено</div>
+                        <div class="final-stat-value" id="finalRoundsCompleted">0</div>
+                    </div>
+
+                    <div class="final-stat-card">
+                        <div class="final-stat-label">Затрачено времени</div>
+                        <div class="final-stat-value" id="finalTimeSpent">0:00</div>
+                    </div>
+                </div>
+
+                <!-- Mode-specific message -->
+                <div class="final-message" id="finalModeMessage"></div>
+
+                <!-- Actions -->
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="restartGame()">Начать заново 🔄</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+    <script>
+        // Забавные куски кода для печати (с увеличивающейся сложностью)
+        const codeSnippets = [
+            {
+                code: `// Hello, World!
+console.log('MWS');`,
+                difficulty: 1
+            },
+            {
+                code: `const bug = 'fixed';
+if (bug) {
+  console.log('found!');
+}`,
+                difficulty: 1.5
+            },
+            {
+                code: `function makeCloud() {
+  return 'cloud'.repeat(99);
+}
+makeCloud();`,
+                difficulty: 2
+            },
+            {
+                code: `const data = [1, 2, 3];
+const magic = data
+  .map(x => x * x)
+  .filter(x => x > 5);`,
+                difficulty: 2.5
+            },
+            {
+                code: `async function deploy() {
+  const cloud = await MWS();
+  cloud.scale(Infinity);
+  return 'PROFIT!';
+}`,
+                difficulty: 3
+            }
+        ];
+
+        // Баги для исправления (с увеличивающейся сложностью)
+        // Структура: язык -> массив багов
+        const bugScenariosByLanguage = {
+            'javascript': [
+                {
+                    description: "Функция возвращает undefined вместо суммы двух чисел",
+                    buggyCode: `function add(a, b) {
+  const result = a + b;
+}
+add(2, 3);`,
+                    fixedCode: `function add(a, b) {
+  const result = a + b;
+  return result;
+}
+add(2, 3);`,
+                    difficulty: 1,
+                    hint: "Забыли вернуть результат?"
+                },
+                {
+                    description: "Массив не фильтруется правильно - остаются все элементы",
+                    buggyCode: `const numbers = [1, 2, 3, 4, 5];
+const even = numbers.filter(n => {
+  n % 2 === 0;
+});
+console.log(even);`,
+                    fixedCode: `const numbers = [1, 2, 3, 4, 5];
+const even = numbers.filter(n => {
+  return n % 2 === 0;
+});
+console.log(even);`,
+                    difficulty: 1.5,
+                    hint: "Arrow function с фигурными скобками требует return"
+                },
+                {
+                    description: "Цикл выполняется бесконечно - страница зависает!",
+                    buggyCode: `let count = 0;
+while (count < 5) {
+  console.log(count);
+}
+console.log('Done!');`,
+                    fixedCode: `let count = 0;
+while (count < 5) {
+  console.log(count);
+  count++;
+}
+console.log('Done!');`,
+                    difficulty: 2,
+                    hint: "Что-то мешает циклу завершиться..."
+                },
+                {
+                    description: "Promise не обрабатывается и данные не получаются (несколько багов)",
+                    buggyCode: `async function getData() {
+  const response = fetch('/api/data');
+  const data = response.json();
+  return data;
+}
+
+getData().then(result => {
+  console.log(result);
+});`,
+                    fixedCode: `async function getData() {
+  const response = await fetch('/api/data');
+  const data = await response.json();
+  return data;
+}
+
+getData().then(result => {
+  console.log(result);
+});`,
+                    difficulty: 2.5,
+                    hint: "Async функция без await - это подозрительно"
+                },
+                {
+                    description: "Объект не обновляется в state и компонент не ререндерится (3+ бага)",
+                    buggyCode: `const state = { count: 0, users: [] };
+
+function updateCount(newCount) {
+  state.count = newCount;
+}
+
+function addUser(user) {
+  state.users.push(user);
+  return state;
+}
+
+const newState = addUser({ id: 1 });`,
+                    fixedCode: `const state = { count: 0, users: [] };
+
+function updateCount(newCount) {
+  return { ...state, count: newCount };
+}
+
+function addUser(user) {
+  return {
+    ...state,
+    users: [...state.users, user]
+  };
+}
+
+const newState = addUser({ id: 1 });`,
+                    difficulty: 3,
+                    hint: "Иммутабельность - ключ к счастью в React/Redux"
+                }
+            ],
+            'python': [
+                {
+                    description: "Функция возвращает None вместо суммы двух чисел",
+                    buggyCode: `def add(a, b):
+    result = a + b
+
+print(add(2, 3))`,
+                    fixedCode: `def add(a, b):
+    result = a + b
+    return result
+
+print(add(2, 3))`,
+                    difficulty: 1,
+                    hint: "Забыли вернуть результат?"
+                },
+                {
+                    description: "List comprehension возвращает None вместо списка чисел",
+                    buggyCode: `numbers = [1, 2, 3, 4, 5]
+even = [n for n in numbers if n % 2 == 0
+        for _ in [print(n)]]
+print(even)`,
+                    fixedCode: `numbers = [1, 2, 3, 4, 5]
+even = [n for n in numbers if n % 2 == 0]
+print(even)`,
+                    difficulty: 1.5,
+                    hint: "List comprehension не должен содержать побочные эффекты"
+                },
+                {
+                    description: "Цикл выполняется бесконечно - программа зависает!",
+                    buggyCode: `count = 0
+while count < 5:
+    print(count)
+
+print('Done!')`,
+                    fixedCode: `count = 0
+while count < 5:
+    print(count)
+    count += 1
+
+print('Done!')`,
+                    difficulty: 2,
+                    hint: "Что-то мешает циклу завершиться..."
+                },
+                {
+                    description: "Асинхронная функция не ждет результата (несколько багов)",
+                    buggyCode: `import asyncio
+
+async def get_data():
+    response = asyncio.sleep(1)
+    data = {'result': 'success'}
+    return data
+
+asyncio.run(get_data())`,
+                    fixedCode: `import asyncio
+
+async def get_data():
+    await asyncio.sleep(1)
+    data = {'result': 'success'}
+    return data
+
+asyncio.run(get_data())`,
+                    difficulty: 2.5,
+                    hint: "Async функция без await - это подозрительно"
+                },
+                {
+                    description: "Словарь изменяется напрямую вместо создания копии (3+ бага)",
+                    buggyCode: `state = {'count': 0, 'users': []}
+
+def update_count(new_count):
+    state['count'] = new_count
+
+def add_user(user):
+    state['users'].append(user)
+    return state
+
+new_state = add_user({'id': 1})`,
+                    fixedCode: `state = {'count': 0, 'users': []}
+
+def update_count(new_count):
+    return {**state, 'count': new_count}
+
+def add_user(user):
+    return {
+        **state,
+        'users': [*state['users'], user]
+    }
+
+new_state = add_user({'id': 1})`,
+                    difficulty: 3,
+                    hint: "Иммутабельность - лучшая практика для state management"
+                }
+            ],
+            'cpp': [
+                {
+                    description: "Функция ничего не возвращает вместо суммы двух чисел",
+                    buggyCode: `#include <iostream>
+
+int add(int a, int b) {
+    int result = a + b;
+}
+
+int main() {
+    add(2, 3);
+    return 0;
+}`,
+                    fixedCode: `#include <iostream>
+
+int add(int a, int b) {
+    int result = a + b;
+    return result;
+}
+
+int main() {
+    add(2, 3);
+    return 0;
+}`,
+                    difficulty: 1,
+                    hint: "Забыли вернуть результат?"
+                },
+                {
+                    description: "Лямбда-функция не возвращает bool при фильтрации",
+                    buggyCode: `#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    vector<int> nums = {1,2,3,4,5};
+    vector<int> even;
+    copy_if(nums.begin(), nums.end(),
+            back_inserter(even),
+            [](int n) { n % 2 == 0; });
+    return 0;
+}`,
+                    fixedCode: `#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    vector<int> nums = {1,2,3,4,5};
+    vector<int> even;
+    copy_if(nums.begin(), nums.end(),
+            back_inserter(even),
+            [](int n) { return n % 2 == 0; });
+    return 0;
+}`,
+                    difficulty: 1.5,
+                    hint: "Лямбда должна возвращать результат"
+                },
+                {
+                    description: "Цикл выполняется бесконечно - программа зависает!",
+                    buggyCode: `#include <iostream>
+using namespace std;
+
+int main() {
+    int count = 0;
+    while (count < 5) {
+        cout << count << endl;
+    }
+    cout << "Done!" << endl;
+    return 0;
+}`,
+                    fixedCode: `#include <iostream>
+using namespace std;
+
+int main() {
+    int count = 0;
+    while (count < 5) {
+        cout << count << endl;
+        count++;
+    }
+    cout << "Done!" << endl;
+    return 0;
+}`,
+                    difficulty: 2,
+                    hint: "Что-то мешает циклу завершиться..."
+                },
+                {
+                    description: "Future не ждет результата асинхронной операции",
+                    buggyCode: `#include <future>
+#include <iostream>
+using namespace std;
+
+int get_data() {
+    this_thread::sleep_for(1s);
+    return 42;
+}
+
+int main() {
+    auto result = async(get_data);
+    cout << result << endl;
+    return 0;
+}`,
+                    fixedCode: `#include <future>
+#include <iostream>
+using namespace std;
+
+int get_data() {
+    this_thread::sleep_for(1s);
+    return 42;
+}
+
+int main() {
+    auto result = async(get_data);
+    cout << result.get() << endl;
+    return 0;
+}`,
+                    difficulty: 2.5,
+                    hint: "Нужно вызвать .get() чтобы получить результат"
+                },
+                {
+                    description: "Структура изменяется напрямую вместо создания новой копии",
+                    buggyCode: `#include <vector>
+using namespace std;
+
+struct State {
+    int count;
+    vector<int> users;
+};
+
+State update_count(State& s, int n) {
+    s.count = n;
+    return s;
+}
+
+int main() {
+    State state{0, {}};
+    update_count(state, 5);
+    return 0;
+}`,
+                    fixedCode: `#include <vector>
+using namespace std;
+
+struct State {
+    int count;
+    vector<int> users;
+};
+
+State update_count(const State& s, int n) {
+    State new_state = s;
+    new_state.count = n;
+    return new_state;
+}
+
+int main() {
+    State state{0, {}};
+    update_count(state, 5);
+    return 0;
+}`,
+                    difficulty: 3,
+                    hint: "Создавайте копию вместо изменения оригинала"
+                }
+            ],
+            'csharp': [
+                {
+                    description: "Метод ничего не возвращает вместо суммы двух чисел",
+                    buggyCode: `using System;
+
+class Program {
+    static int Add(int a, int b) {
+        int result = a + b;
+    }
+
+    static void Main() {
+        Add(2, 3);
+    }
+}`,
+                    fixedCode: `using System;
+
+class Program {
+    static int Add(int a, int b) {
+        int result = a + b;
+        return result;
+    }
+
+    static void Main() {
+        Add(2, 3);
+    }
+}`,
+                    difficulty: 1,
+                    hint: "Забыли вернуть результат?"
+                },
+                {
+                    description: "LINQ Where не возвращает bool при фильтрации",
+                    buggyCode: `using System;
+using System.Linq;
+
+class Program {
+    static void Main() {
+        var numbers = new[] {1,2,3,4,5};
+        var even = numbers.Where(n => {
+            n % 2 == 0;
+        });
+        Console.WriteLine(even.Count());
+    }
+}`,
+                    fixedCode: `using System;
+using System.Linq;
+
+class Program {
+    static void Main() {
+        var numbers = new[] {1,2,3,4,5};
+        var even = numbers.Where(n => {
+            return n % 2 == 0;
+        });
+        Console.WriteLine(even.Count());
+    }
+}`,
+                    difficulty: 1.5,
+                    hint: "Лямбда с фигурными скобками требует return"
+                },
+                {
+                    description: "Цикл выполняется бесконечно - программа зависает!",
+                    buggyCode: `using System;
+
+class Program {
+    static void Main() {
+        int count = 0;
+        while (count < 5) {
+            Console.WriteLine(count);
+        }
+        Console.WriteLine("Done!");
+    }
+}`,
+                    fixedCode: `using System;
+
+class Program {
+    static void Main() {
+        int count = 0;
+        while (count < 5) {
+            Console.WriteLine(count);
+            count++;
+        }
+        Console.WriteLine("Done!");
+    }
+}`,
+                    difficulty: 2,
+                    hint: "Что-то мешает циклу завершиться..."
+                },
+                {
+                    description: "Task не ожидается и результат не получается",
+                    buggyCode: `using System;
+using System.Threading.Tasks;
+
+class Program {
+    static async Task<int> GetData() {
+        var result = Task.Delay(1000);
+        return 42;
+    }
+
+    static void Main() {
+        GetData();
+    }
+}`,
+                    fixedCode: `using System;
+using System.Threading.Tasks;
+
+class Program {
+    static async Task<int> GetData() {
+        await Task.Delay(1000);
+        return 42;
+    }
+
+    static void Main() {
+        GetData();
+    }
+}`,
+                    difficulty: 2.5,
+                    hint: "Async метод без await - это подозрительно"
+                },
+                {
+                    description: "Record изменяется напрямую вместо with-выражения",
+                    buggyCode: `using System.Collections.Generic;
+
+record State(int Count, List<int> Users);
+
+class Program {
+    static State UpdateCount(State s, int n) {
+        s.Count = n;
+        return s;
+    }
+
+    static void Main() {
+        var state = new State(0, new());
+        UpdateCount(state, 5);
+    }
+}`,
+                    fixedCode: `using System.Collections.Generic;
+
+record State(int Count, List<int> Users);
+
+class Program {
+    static State UpdateCount(State s, int n) {
+        return s with { Count = n };
+    }
+
+    static void Main() {
+        var state = new State(0, new());
+        UpdateCount(state, 5);
+    }
+}`,
+                    difficulty: 3,
+                    hint: "Используйте with для иммутабельных изменений"
+                }
+            ],
+            'java': [
+                {
+                    description: "Метод ничего не возвращает вместо суммы двух чисел",
+                    buggyCode: `public class Main {
+    static int add(int a, int b) {
+        int result = a + b;
+    }
+
+    public static void main(String[] args) {
+        add(2, 3);
+    }
+}`,
+                    fixedCode: `public class Main {
+    static int add(int a, int b) {
+        int result = a + b;
+        return result;
+    }
+
+    public static void main(String[] args) {
+        add(2, 3);
+    }
+}`,
+                    difficulty: 1,
+                    hint: "Забыли вернуть результат?"
+                },
+                {
+                    description: "Stream filter не возвращает boolean при фильтрации",
+                    buggyCode: `import java.util.*;
+import java.util.stream.*;
+
+public class Main {
+    public static void main(String[] args) {
+        var nums = List.of(1,2,3,4,5);
+        var even = nums.stream()
+            .filter(n -> {
+                n % 2 == 0;
+            })
+            .toList();
+        System.out.println(even.size());
+    }
+}`,
+                    fixedCode: `import java.util.*;
+import java.util.stream.*;
+
+public class Main {
+    public static void main(String[] args) {
+        var nums = List.of(1,2,3,4,5);
+        var even = nums.stream()
+            .filter(n -> {
+                return n % 2 == 0;
+            })
+            .toList();
+        System.out.println(even.size());
+    }
+}`,
+                    difficulty: 1.5,
+                    hint: "Лямбда с фигурными скобками требует return"
+                },
+                {
+                    description: "Цикл выполняется бесконечно - программа зависает!",
+                    buggyCode: `public class Main {
+    public static void main(String[] args) {
+        int count = 0;
+        while (count < 5) {
+            System.out.println(count);
+        }
+        System.out.println("Done!");
+    }
+}`,
+                    fixedCode: `public class Main {
+    public static void main(String[] args) {
+        int count = 0;
+        while (count < 5) {
+            System.out.println(count);
+            count++;
+        }
+        System.out.println("Done!");
+    }
+}`,
+                    difficulty: 2,
+                    hint: "Что-то мешает циклу завершиться..."
+                },
+                {
+                    description: "CompletableFuture не ожидается и результат не получается",
+                    buggyCode: `import java.util.concurrent.*;
+
+public class Main {
+    static CompletableFuture<Integer> getData() {
+        var future = CompletableFuture
+            .runAsync(() -> {
+                Thread.sleep(1000);
+            });
+        return CompletableFuture
+            .completedFuture(42);
+    }
+
+    public static void main(String[] args) {
+        getData();
+    }
+}`,
+                    fixedCode: `import java.util.concurrent.*;
+
+public class Main {
+    static CompletableFuture<Integer> getData() {
+        return CompletableFuture
+            .supplyAsync(() -> {
+                try { Thread.sleep(1000); }
+                catch (Exception e) {}
+                return 42;
+            });
+    }
+
+    public static void main(String[] args) {
+        getData();
+    }
+}`,
+                    difficulty: 2.5,
+                    hint: "Используйте supplyAsync вместо runAsync для возврата значения"
+                },
+                {
+                    description: "Коллекция изменяется напрямую вместо создания новой",
+                    buggyCode: `import java.util.*;
+
+class State {
+    int count;
+    List<Integer> users;
+}
+
+public class Main {
+    static State updateCount(State s, int n) {
+        s.count = n;
+        return s;
+    }
+
+    public static void main(String[] args) {
+        var state = new State();
+        state.count = 0;
+        state.users = new ArrayList<>();
+        updateCount(state, 5);
+    }
+}`,
+                    fixedCode: `import java.util.*;
+
+record State(int count, List<Integer> users) {}
+
+public class Main {
+    static State updateCount(State s, int n) {
+        return new State(n, s.users());
+    }
+
+    public static void main(String[] args) {
+        var state = new State(0,
+            new ArrayList<>());
+        updateCount(state, 5);
+    }
+}`,
+                    difficulty: 3,
+                    hint: "Используйте records для иммутабельности"
+                }
+            ],
+            'golang': [
+                {
+                    description: "Функция не возвращает результат суммы двух чисел",
+                    buggyCode: `package main
+
+import "fmt"
+
+func add(a, b int) int {
+    result := a + b
+}
+
+func main() {
+    add(2, 3)
+}`,
+                    fixedCode: `package main
+
+import "fmt"
+
+func add(a, b int) int {
+    result := a + b
+    return result
+}
+
+func main() {
+    add(2, 3)
+}`,
+                    difficulty: 1,
+                    hint: "Забыли вернуть результат?"
+                },
+                {
+                    description: "Анонимная функция в filter не возвращает bool",
+                    buggyCode: `package main
+
+import "fmt"
+
+func main() {
+    numbers := []int{1,2,3,4,5}
+    var even []int
+    for _, n := range numbers {
+        if func(x int) { x%2 == 0 }(n) {
+            even = append(even, n)
+        }
+    }
+    fmt.Println(even)
+}`,
+                    fixedCode: `package main
+
+import "fmt"
+
+func main() {
+    numbers := []int{1,2,3,4,5}
+    var even []int
+    for _, n := range numbers {
+        if func(x int) bool {
+            return x%2 == 0
+        }(n) {
+            even = append(even, n)
+        }
+    }
+    fmt.Println(even)
+}`,
+                    difficulty: 1.5,
+                    hint: "Функция должна возвращать bool"
+                },
+                {
+                    description: "Цикл выполняется бесконечно - программа зависает!",
+                    buggyCode: `package main
+
+import "fmt"
+
+func main() {
+    count := 0
+    for count < 5 {
+        fmt.Println(count)
+    }
+    fmt.Println("Done!")
+}`,
+                    fixedCode: `package main
+
+import "fmt"
+
+func main() {
+    count := 0
+    for count < 5 {
+        fmt.Println(count)
+        count++
+    }
+    fmt.Println("Done!")
+}`,
+                    difficulty: 2,
+                    hint: "Что-то мешает циклу завершиться..."
+                },
+                {
+                    description: "Горутина не ожидается и результат теряется",
+                    buggyCode: `package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func getData() int {
+    go func() {
+        time.Sleep(1 * time.Second)
+    }()
+    return 42
+}
+
+func main() {
+    result := getData()
+    fmt.Println(result)
+}`,
+                    fixedCode: `package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func getData() int {
+    done := make(chan int)
+    go func() {
+        time.Sleep(1 * time.Second)
+        done <- 42
+    }()
+    return <-done
+}
+
+func main() {
+    result := getData()
+    fmt.Println(result)
+}`,
+                    difficulty: 2.5,
+                    hint: "Используйте каналы для синхронизации горутин"
+                },
+                {
+                    description: "Slice изменяется напрямую вместо создания копии",
+                    buggyCode: `package main
+
+type State struct {
+    Count int
+    Users []int
+}
+
+func updateCount(s *State, n int) *State {
+    s.Count = n
+    return s
+}
+
+func main() {
+    state := &State{0, []int{}}
+    updateCount(state, 5)
+}`,
+                    fixedCode: `package main
+
+type State struct {
+    Count int
+    Users []int
+}
+
+func updateCount(s State, n int) State {
+    return State{
+        Count: n,
+        Users: s.Users,
+    }
+}
+
+func main() {
+    state := State{0, []int{}}
+    updateCount(state, 5)
+}`,
+                    difficulty: 3,
+                    hint: "Возвращайте новую структуру вместо изменения по указателю"
+                }
+            ]
+        };
+
+        // Backwards compatibility - сохраняем переменную bugScenarios для старого кода
+        let bugScenarios = bugScenariosByLanguage['javascript'];
+
+        // Архитектурные уровни для Cloud Architect
+        const architectureLevels = [
+            {
+                name: "Уровень 1: Простое веб-приложение",
+                description: "Стартап запускает MVP продукта. Постройте классическую 3-tier архитектуру для веб-приложения",
+                requirements: "Классика: Frontend (React/Vue) → Backend API (Node.js/Python) → Database (PostgreSQL/MongoDB)",
+                availableBlocks: ['Frontend', 'Backend API', 'Database', 'Cache'],
+                requiredBlocks: ['Frontend', 'Backend API', 'Database'],
+                requiredConnections: [
+                    {from: 'Frontend', to: 'Backend API'},
+                    {from: 'Backend API', to: 'Database'}
+                ],
+                difficulty: 1,
+                hint: "💡 Базовый паттерн: клиент отправляет запрос → API обрабатывает → база данных сохраняет",
+                bonusConfigBuggy: `version: '3.8'
+services:
+  frontend:
+    image: nginx:latest
+    ports:
+      - "80:80"
+
+  backend:
+    image: node:18
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=database
+      - DB_PORT=5432
+
+  database:
+    image: postgres:15
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_PASSWORD=secret`,
+                bonusConfigFixed: `version: '3.8'
+services:
+  frontend:
+    image: nginx:latest
+    ports:
+      - "80:80"
+
+  backend:
+    image: node:18
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=database
+      - DB_PORT=5432
+
+  database:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=secret`,
+                bonusConfigHint: "🎯 Исправьте порт PostgreSQL - он должен быть стандартным 5432",
+                bonusConfigLanguage: "yaml"
+            },
+            {
+                name: "Уровень 2: Система авторизации",
+                description: "Приложение растет! Нужна безопасная система входа пользователей с JWT-токенами и сессиями",
+                requirements: "Добавьте Auth Service для управления пользователями и Redis для хранения сессий",
+                availableBlocks: ['Frontend', 'Backend API', 'Database', 'Auth Service', 'Redis', 'Load Balancer'],
+                requiredBlocks: ['Frontend', 'Backend API', 'Database', 'Auth Service', 'Redis'],
+                requiredConnections: [
+                    {from: 'Frontend', to: 'Backend API'},
+                    {from: 'Backend API', to: 'Auth Service'},
+                    {from: 'Auth Service', to: 'Database'},
+                    {from: 'Auth Service', to: 'Redis'}
+                ],
+                difficulty: 1.5,
+                hint: "💡 Auth Service проверяет логины/пароли в Database и хранит активные сессии в Redis для быстрого доступа",
+                bonusConfigBuggy: `{
+  "jwt": {
+    "secret": "my-secret-key",
+    "expiresIn": "24d",
+    "algorithm": "HS256"
+  },
+  "redis": {
+    "host": "localhost",
+    "port": 6379,
+    "ttl": 86400
+  },
+  "session": {
+    "maxAge": 86400000,
+    "secure": true
+  }
+}`,
+                bonusConfigFixed: `{
+  "jwt": {
+    "secret": "my-secret-key",
+    "expiresIn": "24h",
+    "algorithm": "HS256"
+  },
+  "redis": {
+    "host": "localhost",
+    "port": 6379,
+    "ttl": 86400
+  },
+  "session": {
+    "maxAge": 86400000,
+    "secure": true
+  }
+}`,
+                bonusConfigHint: "🎯 JWT токен истекает через 24... что? Дни (d) или часы (h)?",
+                bonusConfigLanguage: "json"
+            },
+            {
+                name: "Уровень 3: CI/CD конвейер",
+                description: "Команда выросла до 10 разработчиков. Автоматизируйте процесс от коммита до production!",
+                requirements: "Постройте непрерывный pipeline: Git → Сборка → Тесты → Docker образ → Автодеплой",
+                availableBlocks: ['Git Repo', 'Build', 'Test', 'Docker Registry', 'Deploy', 'Monitoring', 'Production'],
+                requiredBlocks: ['Git Repo', 'Build', 'Test', 'Docker Registry', 'Deploy'],
+                requiredConnections: [
+                    {from: 'Git Repo', to: 'Build'},
+                    {from: 'Build', to: 'Test'},
+                    {from: 'Test', to: 'Docker Registry'},
+                    {from: 'Docker Registry', to: 'Deploy'}
+                ],
+                difficulty: 2,
+                hint: "💡 GitOps подход: каждый git push запускает сборку, прогоняет тесты, собирает Docker образ и деплоит если всё ОК",
+                bonusConfigBuggy: `stages:
+  - build
+  - test
+  - deploy
+
+build_app:
+  stage: build
+  script:
+    - npm install
+    - npm run build
+
+test_app:
+  stage: test
+  script:
+    - npm run test
+  only:
+    - main
+
+deploy_app:
+  stage: deploy
+  script:
+    - docker build -t myapp:latest .
+    - docker push myapp:latest
+  only:
+    - develop`,
+                bonusConfigFixed: `stages:
+  - build
+  - test
+  - deploy
+
+build_app:
+  stage: build
+  script:
+    - npm install
+    - npm run build
+
+test_app:
+  stage: test
+  script:
+    - npm run test
+  only:
+    - main
+
+deploy_app:
+  stage: deploy
+  script:
+    - docker build -t myapp:latest .
+    - docker push myapp:latest
+  only:
+    - main`,
+                bonusConfigHint: "🎯 Deploy запускается для ветки develop, а тесты для main. Нужна синхронизация!",
+                bonusConfigLanguage: "yaml"
+            },
+            {
+                name: "Уровень 4: Асинхронная обработка",
+                description: "10000 пользователей онлайн! Тяжелые задачи замедляют API. Внедрите очереди сообщений",
+                requirements: "Message Queue разгрузит Backend: долгие задачи обрабатывают Worker'ы асинхронно",
+                availableBlocks: ['Frontend', 'Backend API', 'Database', 'RabbitMQ', 'Worker', 'Notifications', 'Redis', 'Monitoring'],
+                requiredBlocks: ['Frontend', 'Backend API', 'Database', 'RabbitMQ', 'Worker', 'Notifications'],
+                requiredConnections: [
+                    {from: 'Frontend', to: 'Backend API'},
+                    {from: 'Backend API', to: 'Database'},
+                    {from: 'Backend API', to: 'RabbitMQ'},
+                    {from: 'RabbitMQ', to: 'Worker'},
+                    {from: 'Worker', to: 'Database'},
+                    {from: 'Worker', to: 'Notifications'}
+                ],
+                difficulty: 2.5,
+                hint: "💡 Backend быстро отвечает пользователю и ставит задачу в очередь. Worker забирает задачи и обрабатывает фоном",
+                bonusConfigBuggy: `const amqp = require('amqplib');
+
+const config = {
+  url: 'amqp://localhost',
+  queue: 'tasks',
+  prefetch: 10,
+  durable: true,
+  retry: {
+    maxRetries: 3,
+    delay: 5000
+  },
+  deadLetter: {
+    exchange: 'dlx',
+    queue: 'tasks.dlq'
+  }
+};
+
+async function consumeMessages() {
+  const connection = await amqp.connect(config.url);
+  const channel = await connection.createChannel();
+
+  await channel.assertQueue(config.queue, {
+    durable: config.durable
+  });
+
+  channel.prefetch(1);
+
+  channel.consume(config.queue, async (msg) => {
+    await processMessage(msg);
+    channel.ack(msg);
+  });
+}`,
+                bonusConfigFixed: `const amqp = require('amqplib');
+
+const config = {
+  url: 'amqp://localhost',
+  queue: 'tasks',
+  prefetch: 10,
+  durable: true,
+  retry: {
+    maxRetries: 3,
+    delay: 5000
+  },
+  deadLetter: {
+    exchange: 'dlx',
+    queue: 'tasks.dlq'
+  }
+};
+
+async function consumeMessages() {
+  const connection = await amqp.connect(config.url);
+  const channel = await connection.createChannel();
+
+  await channel.assertQueue(config.queue, {
+    durable: config.durable
+  });
+
+  channel.prefetch(config.prefetch);
+
+  channel.consume(config.queue, async (msg) => {
+    await processMessage(msg);
+    channel.ack(msg);
+  });
+}`,
+                bonusConfigHint: "🎯 Prefetch в конфиге 10, а используется 1. Worker может обрабатывать больше!",
+                bonusConfigLanguage: "javascript"
+            },
+            {
+                name: "Уровень 5: Production инфраструктура",
+                description: "100K пользователей! Нужна отказоустойчивая инфраструктура с балансировкой и мониторингом",
+                requirements: "High Availability: Load Balancer, несколько Backend серверов, общий Cache, мониторинг всего",
+                availableBlocks: ['Frontend', 'Load Balancer', 'Backend API', 'Backend API 2', 'Redis', 'Database', 'RabbitMQ', 'Worker', 'Monitoring', 'Logging', 'CDN'],
+                requiredBlocks: ['Load Balancer', 'Backend API', 'Backend API 2', 'Redis', 'Database', 'Monitoring'],
+                requiredConnections: [
+                    {from: 'Load Balancer', to: 'Backend API'},
+                    {from: 'Load Balancer', to: 'Backend API 2'},
+                    {from: 'Backend API', to: 'Redis'},
+                    {from: 'Backend API', to: 'Database'},
+                    {from: 'Backend API 2', to: 'Redis'},
+                    {from: 'Backend API 2', to: 'Database'},
+                    {from: 'Monitoring', to: 'Backend API'},
+                    {from: 'Monitoring', to: 'Backend API 2'}
+                ],
+                difficulty: 3,
+                hint: "💡 Load Balancer распределяет нагрузку между серверами. Если один упадет - второй продолжит работу. Все шарят Cache",
+                bonusConfigBuggy: `upstream backend {
+    least_conn;
+    server backend1:3000 max_fails=3 fail_timeout=30s;
+    server backend2:3000 max_fails=3 fail_timeout=30s;
+}
+
+server {
+    listen 80;
+    server_name api.example.com;
+
+    location / {
+        proxy_pass http://backend;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_connect_timeout 5s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 10s;
+    }
+
+    location /health {
+        access_log off;
+        return 200 "healthy";
+    }
+}`,
+                bonusConfigFixed: `upstream backend {
+    least_conn;
+    server backend1:3000 max_fails=3 fail_timeout=30s;
+    server backend2:3000 max_fails=3 fail_timeout=30s;
+}
+
+server {
+    listen 80;
+    server_name api.example.com;
+
+    location / {
+        proxy_pass http://backend;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_connect_timeout 5s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+
+    location /health {
+        access_log off;
+        return 200 "healthy";
+    }
+}`,
+                bonusConfigHint: "🎯 Read timeout 10s слишком мал при send timeout 60s. Долгие запросы оборвутся!",
+                bonusConfigLanguage: "nginx"
+            },
+            {
+                name: "Уровень 6: Микросервисная архитектура",
+                description: "Монолит больше не масштабируется! Разбейте систему на микросервисы с API Gateway",
+                requirements: "API Gateway → User Service, Product Service, Order Service. Каждый со своей БД!",
+                availableBlocks: ['API Gateway', 'User Service', 'Product Service', 'Order Service', 'User DB', 'Product DB', 'Order DB', 'Redis', 'Message Bus'],
+                requiredBlocks: ['API Gateway', 'User Service', 'Product Service', 'Order Service', 'User DB', 'Product DB', 'Order DB'],
+                requiredConnections: [
+                    {from: 'API Gateway', to: 'User Service'},
+                    {from: 'API Gateway', to: 'Product Service'},
+                    {from: 'API Gateway', to: 'Order Service'},
+                    {from: 'User Service', to: 'User DB'},
+                    {from: 'Product Service', to: 'Product DB'},
+                    {from: 'Order Service', to: 'Order DB'}
+                ],
+                difficulty: 3.5,
+                hint: "💡 Каждый микросервис независим со своей базой. API Gateway - единая точка входа, маршрутизирует запросы",
+                bonusConfigBuggy: `{
+  "routes": [
+    {
+      "path": "/api/users/*",
+      "service": "user-service",
+      "url": "http://user-service:3001",
+      "timeout": 5000
+    },
+    {
+      "path": "/api/products/*",
+      "service": "product-service",
+      "url": "http://product-service:3002",
+      "timeout": 5000
+    },
+    {
+      "path": "/api/orders/*",
+      "service": "product-service",
+      "url": "http://order-service:3003",
+      "timeout": 5000
+    }
+  ],
+  "rateLimit": {
+    "windowMs": 60000,
+    "max": 100
+  }
+}`,
+                bonusConfigFixed: `{
+  "routes": [
+    {
+      "path": "/api/users/*",
+      "service": "user-service",
+      "url": "http://user-service:3001",
+      "timeout": 5000
+    },
+    {
+      "path": "/api/products/*",
+      "service": "product-service",
+      "url": "http://product-service:3002",
+      "timeout": 5000
+    },
+    {
+      "path": "/api/orders/*",
+      "service": "order-service",
+      "url": "http://order-service:3003",
+      "timeout": 5000
+    }
+  ],
+  "rateLimit": {
+    "windowMs": 60000,
+    "max": 100
+  }
+}`,
+                bonusConfigHint: "🎯 Маршрут /api/orders/* ведет не на тот сервис! Проверьте service name",
+                bonusConfigLanguage: "json"
+            },
+            {
+                name: "Уровень 7: Event-Driven архитектура",
+                description: "1M событий в секунду! Постройте реактивную систему на событиях с Kafka",
+                requirements: "Сервисы общаются через события: Event Producer → Kafka → Event Consumers (независимые сервисы)",
+                availableBlocks: ['Frontend', 'API Gateway', 'Order Service', 'Payment Service', 'Inventory Service', 'Notification Service', 'Kafka', 'Database', 'Analytics', 'Monitoring'],
+                requiredBlocks: ['API Gateway', 'Order Service', 'Kafka', 'Payment Service', 'Inventory Service', 'Notification Service'],
+                requiredConnections: [
+                    {from: 'API Gateway', to: 'Order Service'},
+                    {from: 'Order Service', to: 'Kafka'},
+                    {from: 'Kafka', to: 'Payment Service'},
+                    {from: 'Kafka', to: 'Inventory Service'},
+                    {from: 'Kafka', to: 'Notification Service'}
+                ],
+                difficulty: 4,
+                hint: "💡 Order Service публикует событие в Kafka. Все подписанные сервисы реагируют независимо и асинхронно",
+                bonusConfigBuggy: `const { Kafka } = require('kafkajs');
+
+const kafka = new Kafka({
+  clientId: 'order-service',
+  brokers: ['kafka:9092']
+});
+
+const producer = kafka.producer();
+const consumer = kafka.consumer({
+  groupId: 'payment-service'
+});
+
+async function publishOrderCreated(order) {
+  await producer.connect();
+  await producer.send({
+    topic: 'order-created',
+    messages: [
+      {
+        key: order.id,
+        value: JSON.stringify(order),
+        partition: 0
+      }
+    ]
+  });
+}
+
+async function consumeEvents() {
+  await consumer.connect();
+  await consumer.subscribe({
+    topic: 'order-created',
+    fromBeginning: true
+  });
+
+  await consumer.run({
+    eachMessage: async ({ message }) => {
+      const order = JSON.parse(message.value);
+      await processPayment(order);
+    }
+  });
+}`,
+                bonusConfigFixed: `const { Kafka } = require('kafkajs');
+
+const kafka = new Kafka({
+  clientId: 'order-service',
+  brokers: ['kafka:9092']
+});
+
+const producer = kafka.producer();
+const consumer = kafka.consumer({
+  groupId: 'payment-service'
+});
+
+async function publishOrderCreated(order) {
+  await producer.connect();
+  await producer.send({
+    topic: 'order-created',
+    messages: [
+      {
+        key: order.id,
+        value: JSON.stringify(order)
+      }
+    ]
+  });
+}
+
+async function consumeEvents() {
+  await consumer.connect();
+  await consumer.subscribe({
+    topic: 'order-created',
+    fromBeginning: true
+  });
+
+  await consumer.run({
+    eachMessage: async ({ message }) => {
+      const order = JSON.parse(message.value);
+      await processPayment(order);
+    }
+  });
+}`,
+                bonusConfigHint: "🎯 Жестко указана partition: 0. Kafka сам распределит по ключу!",
+                bonusConfigLanguage: "javascript"
+            }
+        ];
+
+        let editor;
+        let bonusEditor;
+        let currentRound = 0;
+        let startTime;
+        let timerInterval;
+        let currentTargetCode = '';
+        let gameMode = 'typing'; // 'typing', 'bugHunting', или 'architect'
+
+        // New game mechanics
+        let activityStartTime = 0;
+        let activityTimerInterval = null;
+        let attemptsRemaining = 5; // For Cloud Architect
+        let penalties = []; // Penalty history for Cloud Architect
+
+        // Cloud Architect game state
+        let droppedBlocks = [];
+        let connections = [];
+        let selectedBlock = null;
+        let connectingMode = false;
+
+        // Bonus config state
+        let currentBonusLevel = null;
+        let levelScoreBeforeBonus = 0;
+
+        require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+
+        require(['vs/editor/editor.main'], function () {
+            editor = monaco.editor.create(document.getElementById('editor'), {
+                value: '',
+                language: 'javascript',
+                theme: 'vs',
+                fontSize: 18,
+                minimap: { enabled: false },
+                scrollBeyondLastLine: false,
+                lineNumbers: 'on',
+                renderLineHighlight: 'all',
+                automaticLayout: true
+            });
+
+            // Запретить вставку в редакторе
+            editor.onDidPaste((e) => {
+                e.preventDefault();
+                editor.trigger('keyboard', 'undo');
+            });
+
+            editor.onDidChangeModelContent(() => {
+                checkCode();
+            });
+
+            // Создаем бонусный редактор
+            bonusEditor = monaco.editor.create(document.getElementById('bonusEditor'), {
+                value: '',
+                language: 'yaml',
+                theme: 'vs',
+                fontSize: 16,
+                minimap: { enabled: false },
+                scrollBeyondLastLine: false,
+                lineNumbers: 'on',
+                renderLineHighlight: 'all',
+                automaticLayout: true
+            });
+
+            // Initialize drink icon as locked
+        });
+
+        // Глобальный запрет на копирование и вставку
+        document.addEventListener('copy', (e) => e.preventDefault());
+        document.addEventListener('cut', (e) => e.preventDefault());
+        document.addEventListener('paste', (e) => e.preventDefault());
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+        // Activity timer (countdown) for time-limited modes
+        function startActivityTimer(durationMinutes) {
+            activityStartTime = Date.now();
+            const durationMs = durationMinutes * 60 * 1000;
+            const endTime = activityStartTime + durationMs;
+
+            if (activityTimerInterval) clearInterval(activityTimerInterval);
+
+            activityTimerInterval = setInterval(() => {
+                const now = Date.now();
+                const remaining = Math.max(0, endTime - now);
+                const totalSeconds = Math.floor(remaining / 1000);
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+
+                document.getElementById('timer').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+                if (remaining <= 0) {
+                    clearInterval(activityTimerInterval);
+                    showFinalScreen();
+                }
+            }, 100);
+        }
+
+        function startTypingGame() {
+            gameMode = 'typing';
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('gameArea').style.display = 'block';
+            document.getElementById('finishBtn').style.display = 'block';
+            document.getElementById('codeLabel').textContent = 'Напечатайте этот код:';
+            document.getElementById('bugDescription').style.display = 'none';
+            currentRound = 0;
+            totalScore = 0;
+            startActivityTimer(3); // 3 minutes
+            nextRound();
+        }
+
+        function startBugHuntingGame() {
+            // Получаем выбранный язык из dropdown
+            const selectedLanguage = document.getElementById('languageSelector').value;
+
+            // Загружаем соответствующие баги для выбранного языка
+            bugScenarios = bugScenariosByLanguage[selectedLanguage];
+
+            // Настраиваем Monaco Editor на нужный язык
+            const monacoLanguages = {
+                'javascript': 'javascript',
+                'python': 'python',
+                'cpp': 'cpp',
+                'csharp': 'csharp',
+                'java': 'java',
+                'golang': 'go'
+            };
+
+            // Обновляем язык редактора
+            if (editor) {
+                monaco.editor.setModelLanguage(editor.getModel(), monacoLanguages[selectedLanguage]);
+            }
+
+            gameMode = 'bugHunting';
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('gameArea').style.display = 'block';
+            document.getElementById('finishBtn').style.display = 'block';
+            document.getElementById('codeLabel').textContent = 'Баг в этом коде:';
+            document.getElementById('bugDescription').style.display = 'block';
+            currentRound = 0;
+            totalScore = 0;
+            startActivityTimer(3); // 3 minutes
+            nextRound();
+        }
+
+        function nextRound() {
+            // No round limit for typing and bugHunting - play until timer expires
+            // Only architect mode has limited levels (7)
+            if (gameMode === 'architect' && currentRound >= 7) {
+                endGame();
+                return;
+            }
+
+            currentRound++;
+            updateStats();
+
+            if (gameMode === 'typing') {
+                // Cycle through code snippets if we exceed the array length
+                const snippetIndex = (currentRound - 1) % codeSnippets.length;
+                const snippet = codeSnippets[snippetIndex];
+                currentTargetCode = snippet.code;
+                document.getElementById('targetCode').textContent = currentTargetCode;
+                editor.setValue('');
+            } else {
+                // Cycle through bug scenarios if we exceed the array length
+                const scenarioIndex = (currentRound - 1) % bugScenarios.length;
+                const scenario = bugScenarios[scenarioIndex];
+                currentTargetCode = scenario.fixedCode;
+                document.getElementById('targetCode').textContent = scenario.buggyCode;
+                document.getElementById('bugDescriptionText').innerHTML =
+                    `<strong>${scenario.description}</strong><br><br>` +
+                    `💡 Подсказка: ${scenario.hint}`;
+                editor.setValue(scenario.buggyCode);
+            }
+
+            editor.focus();
+
+            startTime = Date.now();
+            // startTimer(); // Убрано: используется только обратный отсчёт от startActivityTimer()
+
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('feedback').className = 'feedback';
+        }
+
+        // Функция startTimer() больше не используется - весь отсчёт времени идёт через startActivityTimer()
+        // function startTimer() {
+        //     if (timerInterval) clearInterval(timerInterval);
+        //     timerInterval = setInterval(() => {
+        //         const elapsed = (Date.now() - startTime) / 1000;
+        //         document.getElementById('timer').textContent = elapsed.toFixed(1);
+        //     }, 100);
+        // }
+
+        function checkCode() {
+            const userCode = editor.getValue();
+
+            if (gameMode === 'typing') {
+                // Нормализуем код для сравнения: убираем пробелы в конце строк и в конце файла
+                const normalizeCode = (code) => {
+                    return code
+                        .split('\n')
+                        .map(line => line.trimEnd())
+                        .join('\n')
+                        .trimEnd();
+                };
+
+                const normalizedUserCode = normalizeCode(userCode);
+                const normalizedTargetCode = normalizeCode(currentTargetCode);
+
+                const progress = (userCode.length / currentTargetCode.length) * 100;
+                document.getElementById('progress').style.width = Math.min(progress, 100) + '%';
+
+                if (normalizedUserCode === normalizedTargetCode) {
+                    roundComplete();
+                } else if (normalizedTargetCode.startsWith(normalizedUserCode)) {
+                    // Правильный ввод
+                    document.getElementById('feedback').textContent = '✓ Отлично!';
+                    document.getElementById('feedback').className = 'feedback perfect';
+                } else {
+                    // Ошибка
+                    document.getElementById('feedback').textContent = '✗ Ошибка! Проверьте код';
+                    document.getElementById('feedback').className = 'feedback error';
+                    document.querySelector('.editor-container').classList.add('shake');
+                    setTimeout(() => {
+                        document.querySelector('.editor-container').classList.remove('shake');
+                    }, 500);
+                }
+            } else {
+                // Bug hunting mode - remove ALL whitespace for comparison
+                const normalizeCode = (code) => {
+                    // Remove all whitespace characters for comparison
+                    return code.replace(/\s+/g, '');
+                };
+
+                const normalizedUserCode = normalizeCode(userCode);
+                const normalizedTargetCode = normalizeCode(currentTargetCode);
+
+                // Calculate similarity with original formatting for progress bar
+                const similarity = calculateSimilarity(userCode.trim(), currentTargetCode.trim());
+                const progress = similarity * 100;
+                document.getElementById('progress').style.width = progress + '%';
+
+                if (normalizedUserCode === normalizedTargetCode) {
+                    roundComplete();
+                } else if (similarity > 0.9) {
+                    document.getElementById('feedback').textContent = '🔥 Почти! Еще чуть-чуть!';
+                    document.getElementById('feedback').className = 'feedback good';
+                } else if (similarity > 0.7) {
+                    document.getElementById('feedback').textContent = '💪 На правильном пути!';
+                    document.getElementById('feedback').className = 'feedback good';
+                } else {
+                    document.getElementById('feedback').textContent = '🔍 Ищите баг...';
+                    document.getElementById('feedback').className = 'feedback';
+                }
+            }
+        }
+
+        function calculateSimilarity(str1, str2) {
+            const len1 = str1.length;
+            const len2 = str2.length;
+
+            if (len1 === 0 && len2 === 0) return 1;
+            if (len1 === 0 || len2 === 0) return 0;
+
+            let matches = 0;
+            const maxLen = Math.max(len1, len2);
+
+            for (let i = 0; i < Math.min(len1, len2); i++) {
+                if (str1[i] === str2[i]) matches++;
+            }
+
+            return matches / maxLen;
+        }
+
+        function roundComplete() {
+            clearInterval(timerInterval);
+
+            const elapsed = (Date.now() - startTime) / 1000;
+
+            let difficulty, basePoints, roundScore, message;
+
+            if (gameMode === 'typing') {
+                const snippet = codeSnippets[currentRound - 1];
+                difficulty = snippet.difficulty;
+                basePoints = 1000;
+                const timeBonus = Math.max(1, 10 / elapsed);
+                const roundMultiplier = currentRound;
+                roundScore = Math.round(basePoints * timeBonus * difficulty * roundMultiplier);
+
+                if (elapsed < 5) {
+                    message = `🔥 ОГОНЬ! +${roundScore} очков!`;
+                } else if (elapsed < 10) {
+                    message = `⚡ Быстро! +${roundScore} очков!`;
+                } else {
+                    message = `👍 Неплохо! +${roundScore} очков!`;
+                }
+            } else {
+                const scenario = bugScenarios[currentRound - 1];
+                difficulty = scenario.difficulty;
+                basePoints = 2000; // Bug fixing дает больше очков!
+
+                // Бонус за скорость исправления
+                const timeBonus = Math.max(1, 30 / elapsed); // Больше времени на поиск бага
+                const roundMultiplier = currentRound;
+                roundScore = Math.round(basePoints * timeBonus * difficulty * roundMultiplier);
+
+                if (elapsed < 20) {
+                    message = `🏆 МАСТЕР ДЕБАГА! +${roundScore} очков!`;
+                } else if (elapsed < 40) {
+                    message = `🔍 Баг найден! +${roundScore} очков!`;
+                } else {
+                    message = `✅ Исправлено! +${roundScore} очков!`;
+                }
+            }
+
+            totalScore += roundScore;
+
+            // Анимация - закомментировано, так как элемент 'score' отсутствует в HTML
+            // document.getElementById('score').classList.add('pulse');
+            // setTimeout(() => {
+            //     document.getElementById('score').classList.remove('pulse');
+            // }, 500);
+
+            document.getElementById('feedback').textContent = message;
+            document.getElementById('feedback').className = 'feedback perfect';
+
+            updateStats();
+
+            setTimeout(() => {
+                nextRound();
+            }, 2000);
+        }
+
+        function updateStats() {
+            document.getElementById('round').textContent = currentRound;
+        }
+
+
+        function showFinalScreen() {
+            clearInterval(timerInterval);
+            if (activityTimerInterval) clearInterval(activityTimerInterval);
+
+            // Hide game areas
+            document.getElementById('gameArea').style.display = 'none';
+            document.getElementById('architectArea').style.display = 'none';
+            document.getElementById('bonusConfigArea').style.display = 'none';
+
+            // Calculate results
+            const elapsedTime = activityStartTime > 0 ? Math.floor((Date.now() - activityStartTime) / 1000) : 0;
+            const minutes = Math.floor(elapsedTime / 60);
+            const seconds = elapsedTime % 60;
+            const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            // Update final screen data
+            document.getElementById('finalRoundsCompleted').textContent = currentRound;
+            document.getElementById('finalTimeSpent').textContent = timeString;
+
+            // Set final screen title based on game mode
+            if (gameMode === 'typing') {
+                document.getElementById('finalTitle').textContent = '⚡ СКОРОСТНОЙ НАБОР завершен!';
+                document.getElementById('finalModeMessage').textContent = 'Победитель определяется по наибольшему количеству раундов';
+            } else if (gameMode === 'bugHunting') {
+                document.getElementById('finalTitle').textContent = '🐛 КОД-ХАНТИНГ завершен!';
+            } else if (gameMode === 'architect') {
+                document.getElementById('finalTitle').textContent = '🏗️ ТЕКИ LOW-КОДИНГ завершен!';
+            }
+
+            // Show final screen
+            document.getElementById('finalScreen').classList.add('show');
+        }
+
+        function endGame() {
+            showFinalScreen();
+        }
+
+        function restartGame() {
+            document.getElementById('finalScreen').classList.remove('show');
+            location.reload();
+        }
+
+        function backToMenu() {
+            document.getElementById('finalScreen').classList.remove('show');
+            document.getElementById('startScreen').style.display = 'flex';
+            document.getElementById('finishBtn').style.display = 'none';
+            currentRound = 0;
+            attemptsRemaining = 5;
+            penalties = [];
+        }
+
+        function finishGame() {
+            if (confirm('Вы уверены, что хотите завершить игру досрочно?')) {
+                showFinalScreen();
+                document.getElementById('finishBtn').style.display = 'none';
+            }
+        }
+
+        // ============ Cloud Architect Game Functions ============
+
+        function startArchitectGame() {
+            gameMode = 'architect';
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('architectArea').style.display = 'block';
+            document.getElementById('finishBtn').style.display = 'block';
+            currentRound = 0;
+            totalScore = 0;
+            attemptsRemaining = 5;
+            penalties = [];
+            updateAttemptsDisplay();
+            nextArchitectLevel();
+        }
+
+        function updateAttemptsDisplay() {
+            const display = document.getElementById('attemptsDisplay');
+            display.textContent = `⚠️ Попытки: ${attemptsRemaining}/5`;
+
+            // Change color based on remaining attempts
+            if (attemptsRemaining <= 1) {
+                display.style.background = '#f8d7da';
+                display.style.borderColor = '#dc3545';
+                display.style.color = '#721c24';
+            } else if (attemptsRemaining <= 2) {
+                display.style.background = '#fff3cd';
+                display.style.borderColor = '#ffc107';
+                display.style.color = '#856404';
+            } else {
+                display.style.background = '#d1ecf1';
+                display.style.borderColor = '#17a2b8';
+                display.style.color = '#0c5460';
+            }
+        }
+
+        function nextArchitectLevel() {
+            if (currentRound >= 7) {
+                endGame();
+                return;
+            }
+
+            currentRound++;
+            updateStats();
+
+            const level = architectureLevels[currentRound - 1];
+
+            document.getElementById('architectTask').innerHTML = `<strong>${level.name}</strong><br>${level.description}`;
+            document.getElementById('architectRequirements').innerHTML = `<strong>Требования:</strong> ${level.requirements}`;
+
+            // Очистка canvas
+            droppedBlocks = [];
+            connections = [];
+            selectedBlock = null;
+            connectingMode = false;
+            document.getElementById('droppedBlocks').innerHTML = '';
+            redrawConnections();
+
+            // Заполнение доступных блоков
+            const blocksContainer = document.getElementById('availableBlocks');
+            blocksContainer.innerHTML = '';
+            level.availableBlocks.forEach(blockName => {
+                const blockEl = document.createElement('div');
+                blockEl.className = 'service-block';
+                blockEl.textContent = blockName;
+                blockEl.draggable = true;
+                blockEl.dataset.blockType = blockName;
+
+                blockEl.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('blockType', blockName);
+                    blockEl.classList.add('dragging');
+                });
+
+                blockEl.addEventListener('dragend', () => {
+                    blockEl.classList.remove('dragging');
+                });
+
+                blocksContainer.appendChild(blockEl);
+            });
+
+            // Настройка canvas для приема блоков
+            const canvas = document.getElementById('canvas');
+            canvas.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+
+            canvas.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const blockType = e.dataTransfer.getData('blockType');
+                if (!blockType) return;
+
+                // Проверяем, нет ли уже такого блока на canvas
+                const alreadyExists = droppedBlocks.some(b => b.type === blockType);
+                if (alreadyExists) {
+                    document.getElementById('architectFeedback').textContent = `Блок "${blockType}" уже добавлен на canvas`;
+                    document.getElementById('architectFeedback').className = 'feedback error';
+                    setTimeout(() => {
+                        document.getElementById('architectFeedback').textContent = '';
+                    }, 2000);
+                    return;
+                }
+
+                const canvasRect = canvas.getBoundingClientRect();
+                const x = e.clientX - canvasRect.left - 60;
+                const y = e.clientY - canvasRect.top - 20;
+
+                addBlockToCanvas(blockType, x, y);
+            });
+
+            startTime = Date.now();
+            // startTimer(); // Убрано: используется только обратный отсчёт от startActivityTimer()
+
+            document.getElementById('architectFeedback').textContent = '';
+            document.getElementById('architectFeedback').className = 'feedback';
+        }
+
+        function addBlockToCanvas(blockType, x, y) {
+            const blockId = 'block_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+            const blockEl = document.createElement('div');
+            blockEl.className = 'dropped-block';
+            blockEl.textContent = blockType;
+            blockEl.style.left = x + 'px';
+            blockEl.style.top = y + 'px';
+            blockEl.dataset.blockId = blockId;
+            blockEl.dataset.blockType = blockType;
+
+            // Добавление кнопки удаления блока
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-block-btn';
+            deleteBtn.innerHTML = '×';
+            deleteBtn.title = 'Удалить блок';
+
+            deleteBtn.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+
+            deleteBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                deleteBlock(blockId);
+            });
+
+            blockEl.appendChild(deleteBtn);
+
+            // Добавление connection handles
+            ['right', 'left', 'top', 'bottom'].forEach(position => {
+                const handle = document.createElement('div');
+                handle.className = `connection-handle handle-${position}`;
+                handle.dataset.position = position;
+
+                handle.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    startConnectionFromHandle(blockId, blockType, e);
+                });
+
+                // Отключаем draggable для ручек
+                handle.setAttribute('draggable', 'false');
+
+                blockEl.appendChild(handle);
+            });
+
+            // Перетаскивание блоков внутри canvas
+            (function setupDragging() {
+                let isDragging = false;
+                let dragOffsetX = 0;
+                let dragOffsetY = 0;
+                let animationFrameId = null;
+
+                const updateBlockPosition = (clientX, clientY) => {
+                    const block = droppedBlocks.find(b => b.id === blockId);
+                    if (!block) return;
+
+                    const canvasRect = document.getElementById('canvas').getBoundingClientRect();
+                    const newX = clientX - canvasRect.left - dragOffsetX;
+                    const newY = clientY - canvasRect.top - dragOffsetY;
+
+                    // Ограничиваем движение в пределах canvas
+                    const maxX = canvasRect.width - blockEl.offsetWidth;
+                    const maxY = canvasRect.height - blockEl.offsetHeight;
+
+                    block.x = Math.max(0, Math.min(newX, maxX));
+                    block.y = Math.max(0, Math.min(newY, maxY));
+
+                    blockEl.style.left = block.x + 'px';
+                    blockEl.style.top = block.y + 'px';
+
+                    // Перерисовываем соединения в реальном времени
+                    redrawConnections();
+                };
+
+                const handleMouseDown = (e) => {
+                    // Игнорируем клики на ручки и кнопку удаления
+                    if (e.target.classList.contains('connection-handle') ||
+                        e.target.classList.contains('delete-block-btn')) {
+                        return;
+                    }
+
+                    isDragging = true;
+                    const rect = blockEl.getBoundingClientRect();
+                    dragOffsetX = e.clientX - rect.left;
+                    dragOffsetY = e.clientY - rect.top;
+
+                    blockEl.style.cursor = 'grabbing';
+                    blockEl.style.zIndex = '1000';
+                    e.preventDefault();
+                    e.stopPropagation();
+                };
+
+                const handleMouseMove = (e) => {
+                    if (!isDragging) return;
+
+                    e.preventDefault();
+
+                    // Используем requestAnimationFrame для плавности
+                    if (animationFrameId) {
+                        cancelAnimationFrame(animationFrameId);
+                    }
+
+                    animationFrameId = requestAnimationFrame(() => {
+                        updateBlockPosition(e.clientX, e.clientY);
+                    });
+                };
+
+                const stopDragging = () => {
+                    if (isDragging) {
+                        isDragging = false;
+                        blockEl.style.cursor = 'move';
+                        blockEl.style.zIndex = '';
+
+                        if (animationFrameId) {
+                            cancelAnimationFrame(animationFrameId);
+                            animationFrameId = null;
+                        }
+
+                        // Финальная перерисовка соединений
+                        redrawConnections();
+                    }
+                };
+
+                const handleMouseUp = (e) => {
+                    stopDragging();
+                };
+
+                const handleMouseLeave = (e) => {
+                    // Если курсор вышел за пределы документа во время перетаскивания
+                    if (isDragging && e.target === document.body) {
+                        stopDragging();
+                    }
+                };
+
+                blockEl.addEventListener('mousedown', handleMouseDown);
+                document.addEventListener('mousemove', handleMouseMove);
+                document.addEventListener('mouseup', handleMouseUp);
+                document.addEventListener('mouseleave', handleMouseLeave);
+
+                // Дополнительная защита от "залипания"
+                window.addEventListener('blur', stopDragging);
+            })();
+
+            document.getElementById('droppedBlocks').appendChild(blockEl);
+
+            droppedBlocks.push({
+                id: blockId,
+                type: blockType,
+                x: x,
+                y: y,
+                element: blockEl
+            });
+
+            validateRealTime();
+        }
+
+        function startConnectionFromHandle(blockId, blockType, event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            selectedBlock = {id: blockId, type: blockType};
+            connectingMode = true;
+
+            const blockEl = document.querySelector(`[data-block-id="${blockId}"]`);
+            blockEl.classList.add('connecting');
+
+            document.getElementById('architectFeedback').textContent = `Выберите блок для соединения с "${blockType}"`;
+            document.getElementById('architectFeedback').className = 'feedback';
+
+            // Создаем временную линию для визуализации
+            const svg = document.getElementById('connectionsSvg');
+            const tempLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            tempLine.setAttribute('class', 'connection-line temp-connection');
+            tempLine.setAttribute('stroke', '#ff9900');
+            tempLine.setAttribute('stroke-width', '3');
+            tempLine.setAttribute('stroke-dasharray', '5, 5');
+            tempLine.id = 'tempConnectionLine';
+
+            // Получаем начальную позицию
+            const fromBlock = droppedBlocks.find(b => b.id === blockId);
+            const canvasRect = document.getElementById('canvas').getBoundingClientRect();
+            const fromRect = fromBlock.element.getBoundingClientRect();
+            const startX = fromRect.left - canvasRect.left + fromRect.width / 2;
+            const startY = fromRect.top - canvasRect.top + fromRect.height / 2;
+
+            tempLine.setAttribute('x1', startX);
+            tempLine.setAttribute('y1', startY);
+            tempLine.setAttribute('x2', startX);
+            tempLine.setAttribute('y2', startY);
+
+            svg.appendChild(tempLine);
+
+            // Подключаем слушатель на document для завершения соединения
+            const handleMouseMove = (e) => {
+                // Обновляем позицию временной линии
+                const currentX = e.clientX - canvasRect.left;
+                const currentY = e.clientY - canvasRect.top;
+                tempLine.setAttribute('x2', currentX);
+                tempLine.setAttribute('y2', currentY);
+            };
+
+            const handleMouseUp = (e) => {
+                // Удаляем временную линию
+                const tempLineEl = document.getElementById('tempConnectionLine');
+                if (tempLineEl) {
+                    tempLineEl.remove();
+                }
+
+                const target = e.target.closest('.dropped-block');
+                if (target && target.dataset.blockId !== blockId) {
+                    const targetId = target.dataset.blockId;
+                    const targetType = target.dataset.blockType;
+
+                    const existingConnection = connections.find(
+                        c => c.from === blockId && c.to === targetId
+                    );
+
+                    if (!existingConnection) {
+                        connections.push({
+                            from: blockId,
+                            fromType: blockType,
+                            to: targetId,
+                            toType: targetType
+                        });
+                        redrawConnections();
+                        validateRealTime();
+
+                        document.getElementById('architectFeedback').textContent = `✓ Соединение создано: ${blockType} → ${targetType}`;
+                        document.getElementById('architectFeedback').className = 'feedback perfect';
+                    }
+                }
+
+                // Сброс режима соединения
+                selectedBlock = null;
+                connectingMode = false;
+                document.querySelectorAll('.dropped-block').forEach(el => {
+                    el.classList.remove('selected', 'connecting');
+                });
+
+                document.removeEventListener('mousemove', handleMouseMove);
+                document.removeEventListener('mouseup', handleMouseUp);
+            };
+
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+        }
+
+        function handleBlockClick(blockId, blockType) {
+            if (!connectingMode) {
+                // Начало соединения
+                selectedBlock = {id: blockId, type: blockType};
+                connectingMode = true;
+
+                // Визуальная индикация
+                document.querySelectorAll('.dropped-block').forEach(el => {
+                    el.classList.remove('selected', 'connecting');
+                });
+                const blockEl = document.querySelector(`[data-block-id="${blockId}"]`);
+                blockEl.classList.add('connecting');
+
+                document.getElementById('architectFeedback').textContent = `Выберите блок для соединения с "${blockType}"`;
+                document.getElementById('architectFeedback').className = 'feedback';
+            } else {
+                // Создание соединения
+                if (selectedBlock.id !== blockId) {
+                    const existingConnection = connections.find(
+                        c => c.from === selectedBlock.id && c.to === blockId
+                    );
+
+                    if (!existingConnection) {
+                        connections.push({
+                            from: selectedBlock.id,
+                            fromType: selectedBlock.type,
+                            to: blockId,
+                            toType: blockType
+                        });
+                        redrawConnections();
+                        validateRealTime();
+                    }
+                }
+
+                // Сброс режима соединения
+                selectedBlock = null;
+                connectingMode = false;
+                document.querySelectorAll('.dropped-block').forEach(el => {
+                    el.classList.remove('selected', 'connecting');
+                });
+                document.getElementById('architectFeedback').textContent = '';
+            }
+        }
+
+        function redrawConnections() {
+            const svg = document.getElementById('connectionsSvg');
+            svg.innerHTML = `
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#ff0032" />
+                    </marker>
+                    <marker id="arrowhead-valid" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#00cc66" />
+                    </marker>
+                </defs>
+            `;
+
+            // Удаляем старые кнопки удаления
+            document.querySelectorAll('.delete-connection-btn').forEach(btn => btn.remove());
+
+            connections.forEach((conn, index) => {
+                const fromBlock = droppedBlocks.find(b => b.id === conn.from);
+                const toBlock = droppedBlocks.find(b => b.id === conn.to);
+
+                if (fromBlock && toBlock) {
+                    // Используем сохранённые координаты блока + половину его размера
+                    const fromEl = fromBlock.element;
+                    const toEl = toBlock.element;
+
+                    const x1 = fromBlock.x + fromEl.offsetWidth / 2;
+                    const y1 = fromBlock.y + fromEl.offsetHeight / 2;
+                    const x2 = toBlock.x + toEl.offsetWidth / 2;
+                    const y2 = toBlock.y + toEl.offsetHeight / 2;
+
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', x1);
+                    line.setAttribute('y1', y1);
+                    line.setAttribute('x2', x2);
+                    line.setAttribute('y2', y2);
+                    line.setAttribute('class', 'connection-line');
+                    line.dataset.connectionIndex = index;
+
+                    // Проверка валидности соединения
+                    const level = architectureLevels[currentRound - 1];
+                    const isValid = level.requiredConnections.some(
+                        rc => rc.from === conn.fromType && rc.to === conn.toType
+                    );
+
+                    if (isValid) {
+                        line.classList.add('valid');
+                        line.setAttribute('marker-end', 'url(#arrowhead-valid)');
+                    } else {
+                        line.classList.add('invalid');
+                        line.setAttribute('marker-end', 'url(#arrowhead)');
+                    }
+
+                    // Клик на линию для удаления
+                    line.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        deleteConnection(index);
+                    });
+
+                    svg.appendChild(line);
+
+                    // Добавляем кнопку удаления на середине линии
+                    const midX = (x1 + x2) / 2;
+                    const midY = (y1 + y2) / 2;
+
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'delete-connection-btn';
+                    deleteBtn.innerHTML = '×';
+                    deleteBtn.style.left = midX + 'px';
+                    deleteBtn.style.top = midY + 'px';
+                    deleteBtn.title = 'Удалить соединение';
+
+                    deleteBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        deleteConnection(index);
+                    });
+
+                    document.getElementById('canvas').appendChild(deleteBtn);
+                }
+            });
+        }
+
+        function deleteConnection(index) {
+            connections.splice(index, 1);
+            redrawConnections();
+            validateRealTime();
+
+            document.getElementById('architectFeedback').textContent = 'Соединение удалено';
+            document.getElementById('architectFeedback').className = 'feedback';
+            setTimeout(() => {
+                if (document.getElementById('architectFeedback').textContent === 'Соединение удалено') {
+                    document.getElementById('architectFeedback').textContent = '';
+                }
+            }, 1500);
+        }
+
+        function deleteBlock(blockId) {
+            // Находим блок
+            const blockIndex = droppedBlocks.findIndex(b => b.id === blockId);
+            if (blockIndex === -1) return;
+
+            const block = droppedBlocks[blockIndex];
+
+            // Удаляем все соединения, связанные с этим блоком
+            connections = connections.filter(conn => conn.from !== blockId && conn.to !== blockId);
+
+            // Удаляем блок из DOM
+            block.element.remove();
+
+            // Удаляем блок из массива
+            droppedBlocks.splice(blockIndex, 1);
+
+            // Перерисовываем соединения
+            redrawConnections();
+            validateRealTime();
+
+            document.getElementById('architectFeedback').textContent = `Блок "${block.type}" удален`;
+            document.getElementById('architectFeedback').className = 'feedback';
+            setTimeout(() => {
+                if (document.getElementById('architectFeedback').textContent === `Блок "${block.type}" удален`) {
+                    document.getElementById('architectFeedback').textContent = '';
+                }
+            }, 1500);
+        }
+
+        function validateRealTime() {
+            const level = architectureLevels[currentRound - 1];
+            const placedBlockTypes = droppedBlocks.map(b => b.type);
+
+            // Проверка наличия требуемых блоков
+            const missingBlocks = level.requiredBlocks.filter(rb => !placedBlockTypes.includes(rb));
+
+            if (missingBlocks.length > 0) {
+                document.getElementById('architectFeedback').textContent =
+                    `Нужно добавить: ${missingBlocks.join(', ')}`;
+                document.getElementById('architectFeedback').className = 'feedback';
+            } else if (connections.length < level.requiredConnections.length) {
+                document.getElementById('architectFeedback').textContent =
+                    `Нужно больше соединений (${connections.length}/${level.requiredConnections.length})`;
+                document.getElementById('architectFeedback').className = 'feedback good';
+            } else {
+                document.getElementById('architectFeedback').textContent =
+                    `Проверьте архитектуру! Все блоки на месте.`;
+                document.getElementById('architectFeedback').className = 'feedback perfect';
+            }
+        }
+
+        function checkArchitecture() {
+            const level = architectureLevels[currentRound - 1];
+            const placedBlockTypes = droppedBlocks.map(b => b.type);
+
+            // Проверка наличия всех требуемых блоков
+            const hasAllBlocks = level.requiredBlocks.every(rb => placedBlockTypes.includes(rb));
+
+            if (!hasAllBlocks) {
+                handleArchitectureError('❌ Не хватает необходимых блоков!');
+                return;
+            }
+
+            // Проверка соединений
+            let correctConnections = 0;
+            level.requiredConnections.forEach(rc => {
+                const hasConnection = connections.some(
+                    c => c.fromType === rc.from && c.toType === rc.to
+                );
+                if (hasConnection) correctConnections++;
+            });
+
+            if (correctConnections === level.requiredConnections.length) {
+                // Уровень пройден!
+                architectLevelComplete();
+            } else {
+                handleArchitectureError(
+                    `❌ Не все соединения правильные! (${correctConnections}/${level.requiredConnections.length})`
+                );
+            }
+        }
+
+        function handleArchitectureError(errorMessage) {
+            attemptsRemaining--;
+            const errorNumber = 5 - attemptsRemaining; // 1st error, 2nd error, etc.
+
+            penalties.push({
+                error: errorNumber,
+                level: currentRound,
+                timestamp: Date.now()
+            });
+
+            updateAttemptsDisplay();
+
+            let penaltyMessage = '';
+
+            if (attemptsRemaining === 0) {
+                // 5th error - Game Over
+                document.getElementById('architectFeedback').textContent =
+                    '💀 GAME OVER! Превышен лимит ошибок!';
+                document.getElementById('architectFeedback').className = 'feedback error';
+                setTimeout(() => {
+                    showFinalScreen();
+                }, 2000);
+                return;
+            } else if (errorNumber === 1 || errorNumber === 3) {
+                // 1st or 3rd error - Warning
+                penaltyMessage = `⚠️ ПРЕДУПРЕЖДЕНИЕ! Следующая ошибка = пьете! (Попыток: ${attemptsRemaining})`;
+            } else if (errorNumber === 2 || errorNumber === 4) {
+                // 2nd or 4th error - Drink penalty
+                penaltyMessage = `🍺 ПЬЕТЕ! Ошибка #${errorNumber}! (Попыток: ${attemptsRemaining})`;
+            }
+
+            document.getElementById('architectFeedback').innerHTML =
+                `${errorMessage}<br><strong style="color: #dc3545;">${penaltyMessage}</strong>`;
+            document.getElementById('architectFeedback').className = 'feedback error';
+
+            document.getElementById('canvas').classList.add('shake');
+            setTimeout(() => {
+                document.getElementById('canvas').classList.remove('shake');
+            }, 500);
+        }
+
+        function architectLevelComplete() {
+            clearInterval(timerInterval);
+
+            const elapsed = (Date.now() - startTime) / 1000;
+            const level = architectureLevels[currentRound - 1];
+
+            // Система очков
+            const basePoints = 3000;
+            const timeBonus = Math.max(1, 60 / elapsed);
+            const difficultyMultiplier = level.difficulty;
+            const roundMultiplier = currentRound;
+            const roundScore = Math.round(basePoints * timeBonus * difficultyMultiplier * roundMultiplier);
+
+            levelScoreBeforeBonus = roundScore;
+            totalScore += roundScore;
+
+            let message = '';
+            if (elapsed < 30) {
+                message = `🏆 АРХИТЕКТОР ГОДА! +${roundScore} очков!`;
+            } else if (elapsed < 60) {
+                message = `⚡ БЫСТРО! +${roundScore} очков!`;
+            } else {
+                message = `✅ АРХИТЕКТУРА ГОТОВА! +${roundScore} очков!`;
+            }
+
+            document.getElementById('architectFeedback').textContent = message;
+            document.getElementById('architectFeedback').className = 'feedback perfect';
+
+            // Анимация - закомментировано, так как элемент 'score' отсутствует в HTML
+            // document.getElementById('score').classList.add('pulse');
+            // setTimeout(() => {
+            //     document.getElementById('score').classList.remove('pulse');
+            // }, 500);
+
+            updateStats();
+
+            // Показываем бонусный этап вместо перехода к следующему уровню
+            setTimeout(() => {
+                showBonusStage();
+            }, 2500);
+        }
+
+        function clearCanvas() {
+            droppedBlocks = [];
+            connections = [];
+            selectedBlock = null;
+            connectingMode = false;
+            document.getElementById('droppedBlocks').innerHTML = '';
+            redrawConnections();
+            document.getElementById('architectFeedback').textContent = '';
+        }
+
+        function showHint() {
+            const level = architectureLevels[currentRound - 1];
+            document.getElementById('architectFeedback').textContent = `💡 ${level.hint}`;
+            document.getElementById('architectFeedback').className = 'feedback good';
+        }
+
+        // ============ Bonus Config Functions ============
+
+        function showBonusStage() {
+            const level = architectureLevels[currentRound - 1];
+            currentBonusLevel = level;
+
+            // Скрываем architect area
+            document.getElementById('architectArea').style.display = 'none';
+
+            // Показываем bonus area
+            document.getElementById('bonusConfigArea').style.display = 'block';
+
+            // Устанавливаем подсказку
+            document.getElementById('bonusHint').textContent = level.bonusConfigHint;
+
+            // Устанавливаем язык и код в редакторе
+            const model = bonusEditor.getModel();
+            monaco.editor.setModelLanguage(model, level.bonusConfigLanguage);
+            bonusEditor.setValue(level.bonusConfigBuggy);
+
+            // Очищаем фидбек
+            document.getElementById('bonusFeedback').textContent = '';
+            document.getElementById('bonusFeedback').className = 'feedback';
+        }
+
+        function checkBonusConfig() {
+            const userConfig = bonusEditor.getValue();
+            const correctConfig = currentBonusLevel.bonusConfigFixed;
+
+            // Нормализуем пробелы и переносы строк для сравнения
+            const normalize = (str) => str.trim().replace(/\s+/g, ' ');
+
+            if (normalize(userConfig) === normalize(correctConfig)) {
+                // Правильно! Даем бонус +50%
+                const bonusPoints = Math.round(levelScoreBeforeBonus * 0.5);
+                totalScore += bonusPoints;
+
+                document.getElementById('bonusFeedback').textContent =
+                    `🎉 ОТЛИЧНО! Конфиг исправлен! Бонус +${bonusPoints} очков! (50% от ${levelScoreBeforeBonus})`;
+                document.getElementById('bonusFeedback').className = 'feedback perfect';
+
+                // Анимация
+                document.getElementById('score').classList.add('pulse');
+                setTimeout(() => {
+                    document.getElementById('score').classList.remove('pulse');
+                }, 500);
+
+                updateStats();
+
+                // Переходим к следующему уровню
+                setTimeout(() => {
+                    proceedToNextLevel();
+                }, 3000);
+            } else {
+                // Неправильно
+                document.getElementById('bonusFeedback').textContent =
+                    '❌ Не совсем правильно. Попробуйте еще раз или пропустите.';
+                document.getElementById('bonusFeedback').className = 'feedback error';
+
+                document.querySelector('.controls').classList.add('shake');
+                setTimeout(() => {
+                    document.querySelector('.controls').classList.remove('shake');
+                }, 500);
+            }
+        }
+
+        function skipBonus() {
+            document.getElementById('bonusFeedback').textContent =
+                'Бонусный этап пропущен. Переходим к следующему уровню...';
+            document.getElementById('bonusFeedback').className = 'feedback';
+
+            setTimeout(() => {
+                proceedToNextLevel();
+            }, 1500);
+        }
+
+        function proceedToNextLevel() {
+            // Скрываем bonus area
+            document.getElementById('bonusConfigArea').style.display = 'none';
+
+            // Показываем architect area
+            document.getElementById('architectArea').style.display = 'block';
+
+            // Переходим к следующему уровню
+            nextArchitectLevel();
+        }
+
+        // Обновление endGame для поддержки architect режима (закомментировано из-за ошибок)
+        // Используется оригинальная функция endGame, которая вызывает showFinalScreen()
+        // const originalEndGame = endGame;
+        // endGame = function() {
+        //     clearInterval(timerInterval);
+        //     document.getElementById('gameArea').style.display = 'none';
+        //     document.getElementById('architectArea').style.display = 'none';
+        //     // БАГ: элемента 'gameOver' не существует, должен быть 'finalScreen'
+        //     // document.getElementById('gameOver').classList.add('show');
+        //     // БАГ: элементов 'finalScore' и 'finalMessage' не существует в finalScreen
+        //     // document.getElementById('finalScore').textContent = totalScore.toLocaleString();
+        //     // document.getElementById('finalMessage').textContent = message;
+        // };
+    </script>
+</body>
+</html>
