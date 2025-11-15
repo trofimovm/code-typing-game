@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MWS Code Games - Выбери активность 🚀</title>
+    <style>
+        /* MTS Fonts */
+        @font-face {
+            font-family: 'MTS Compact';
+            src: url('fonts/MTSCompact-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'MTS Compact';
+            src: url('fonts/MTSCompact-Medium.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'MTS Text';
+            src: url('fonts/MTSText-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'MTS Wide';
+            src: url('fonts/MTSWide-Medium.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'MTS Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: white;
+            color: #333;
+            overflow-x: hidden;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .video-background video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 0, 50, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo svg {
+            width: 51px;
+            height: 51px;
+        }
+
+        .header-title {
+            font-family: 'MTS Wide', sans-serif;
+            font-size: 24px;
+            font-weight: 500;
+            color: #FF0032;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .hero h1 {
+            font-family: 'MTS Wide', sans-serif;
+            font-size: 48px;
+            font-weight: 500;
+            color: #FF0032;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px 30px;
+            border: 2px solid rgba(255, 0, 50, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            min-height: 400px;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 48px rgba(255, 0, 50, 0.2);
+            border-color: #FF0032;
+        }
+
+        .game-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .game-title {
+            font-family: 'MTS Compact', sans-serif;
+            font-size: 28px;
+            font-weight: 500;
+            color: #FF0032;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .game-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .game-description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #444;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .game-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .game-meta-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .game-meta-item svg {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            fill: #FF0032;
+        }
+
+        .game-button {
+            background: linear-gradient(135deg, #FF0032 0%, #E6002E 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 32px;
+            font-family: 'MTS Compact', sans-serif;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(255, 0, 50, 0.3);
+        }
+
+        .game-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 0, 50, 0.4);
+        }
+
+        .game-button:active {
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 40px 20px;
+            }
+        }
+
+        /* Анимация появления карточек */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .game-card {
+            animation: fadeInUp 0.6s ease backwards;
+        }
+
+        .game-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .game-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .game-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Video Background -->
+    <div class="video-background">
+        <video autoplay muted loop playsinline poster="https://mws.ru/versions/release-frontend-2025-11-10-1/main-page-poster.JRAOioNj.webp">
+            <source src="https://mws.ru/versions/release-frontend-2025-11-10-1/main-page-video.B6sSFcu0.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 51 51" fill="none">
+                <rect width="51" height="51" rx="10" fill="#FF0032"/>
+                <path d="M12 18h6l4 10 4-10h6v15h-4V23l-4 10h-4l-4-10v10h-4V18z" fill="white"/>
+            </svg>
+        </div>
+        <div class="header-title">MWS Code Games</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="hero">
+            <h1>Выбери свою активность</h1>
+            <p>Три игровых режима для демонстрации навыков программирования. Выбери свой стиль и начни соревнование!</p>
+        </div>
+
+        <div class="games-grid">
+            <!-- Speed Typing Game -->
+            <a href="speed-typing.html" class="game-card">
+                <div class="game-icon">⚡</div>
+                <div class="game-title">Скоростной набор</div>
+                <div class="game-subtitle">Speed Typing Challenge</div>
+                <div class="game-description">
+                    Перепиши фрагмент кода быстрее оппонента! Соревнование на скорость и точность набора.
+                    Воспроизведи код символ в символ без единой ошибки.
+                </div>
+                <div class="game-meta">
+                    <div class="game-meta-item">
+                        <svg viewBox="0 0 16 16"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 11a5 5 0 110-10 5 5 0 010 10z"/><path d="M8 4v4.5l3 1.5"/></svg>
+                        3 минуты на игру
+                    </div>
+                    <div class="game-meta-item">
+                        <svg viewBox="0 0 16 16"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm1 9H7V9h2v2zm0-3H7V5h2v3z"/></svg>
+                        Парное соревнование
+                    </div>
+                </div>
+                <button class="game-button">Начать игру →</button>
+            </a>
+
+            <!-- Bug Hunter Game -->
+            <a href="bug-hunter.html" class="game-card">
+                <div class="game-icon">🐛</div>
+                <div class="game-title">Код-Хантинг</div>
+                <div class="game-subtitle">Bug Hunter Challenge</div>
+                <div class="game-description">
+                    Найди и исправь ошибку в коде быстрее оппонента! Получи описание проблемы,
+                    проанализируй код и устрани баг. Используй подсказки при необходимости.
+                </div>
+                <div class="game-meta">
+                    <div class="game-meta-item">
+                        <svg viewBox="0 0 16 16"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 11a5 5 0 110-10 5 5 0 010 10z"/><path d="M8 4v4.5l3 1.5"/></svg>
+                        3 минуты на игру
+                    </div>
+                    <div class="game-meta-item">
+                        <svg viewBox="0 0 16 16"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm1 9H7V9h2v2zm0-3H7V5h2v3z"/></svg>
+                        Минимум 3 раунда для напитка
+                    </div>
+                </div>
+                <button class="game-button">Начать игру →</button>
+            </a>
+
+            <!-- Cloud Architect Game -->
+            <a href="cloud-architect.html" class="game-card">
+                <div class="game-icon">☁️</div>
+                <div class="game-title">Теки Low-кодинг</div>
+                <div class="game-subtitle">Cloud Architect Challenge</div>
+                <div class="game-description">
+                    Спроектируй идеальную облачную архитектуру! Drag & drop сервисов, создание связей,
+                    настройка конфигов. 7 уровней сложности с системой штрафов.
+                </div>
+                <div class="game-meta">
+                    <div class="game-meta-item">
+                        <svg viewBox="0 0 16 16"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 11a5 5 0 110-10 5 5 0 010 10z"/><path d="M8 4v4.5l3 1.5"/></svg>
+                        7 уровней архитектуры
+                    </div>
+                    <div class="game-meta-item">
+                        <svg viewBox="0 0 16 16"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm1 9H7V9h2v2zm0-3H7V5h2v3z"/></svg>
+                        5 попыток на всю игру
+                    </div>
+                </div>
+                <button class="game-button">Начать игру →</button>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
