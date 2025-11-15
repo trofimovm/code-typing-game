@@ -1,0 +1,79 @@
+name: Deploy to Yandex Cloud Object Storage
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Yandex Cloud CLI
+        run: |
+          curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+          echo "$HOME/yandex-cloud/bin" >> $GITHUB_PATH
+
+      - name: Configure Yandex Cloud CLI
+        run: |
+          yc config profile create sa-profile
+          yc config set token ${{ secrets.YC_OAUTH_TOKEN }}
+          yc config set folder-id ${{ secrets.YC_FOLDER_ID }}
+
+      - name: Prepare files for deployment
+        run: |
+          # Copy main game file as index.html
+          cp code-typing-game.html index.html
+
+          # List files to be deployed
+          echo "Files to deploy:"
+          ls -lh *.html fonts/
+
+      - name: Upload files to bucket
+        run: |
+          BUCKET_NAME="${{ secrets.YC_BUCKET_NAME }}"
+
+          # Upload all HTML files
+          for file in *.html; do
+            echo "Uploading $file..."
+            yc storage s3api put-object \
+              --bucket "$BUCKET_NAME" \
+              --key "$file" \
+              --body "$file" \
+              --content-type "text/html; charset=utf-8" || exit 1
+          done
+
+          # Upload fonts
+          echo "Uploading fonts..."
+          for font in fonts/*.woff2; do
+            FONT_NAME=$(basename "$font")
+            echo "  Uploading $FONT_NAME..."
+            yc storage s3api put-object \
+              --bucket "$BUCKET_NAME" \
+              --key "fonts/$FONT_NAME" \
+              --body "$font" \
+              --content-type "font/woff2" || exit 1
+          done
+
+          echo "Deployment completed successfully!"
+
+      - name: Display website URL
+        run: |
+          BUCKET_NAME="${{ secrets.YC_BUCKET_NAME }}"
+          echo "======================================"
+          echo "Deployment successful!"
+          echo "======================================"
+          echo ""
+          echo "Website URL: https://$BUCKET_NAME.website.yandexcloud.net"
+          echo ""
+          echo "Game modes:"
+          echo "  - Main menu: https://$BUCKET_NAME.website.yandexcloud.net"
+          echo "  - Speed Typing: https://$BUCKET_NAME.website.yandexcloud.net/speed-typing.html"
+          echo "  - Bug Hunter: https://$BUCKET_NAME.website.yandexcloud.net/bug-hunter.html"
+          echo "  - Cloud Architect: https://$BUCKET_NAME.website.yandexcloud.net/cloud-architect.html"
+          echo ""
+          echo "======================================"
