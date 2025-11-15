@@ -924,7 +924,7 @@ const magic = data
             },
             {
                 code: `const { name, age } = user;
-console.log(\`\${name}: \${age}\`);`,
+console.log(name + ': ' + age);`,
                 difficulty: 3.5
             },
             {
@@ -933,11 +933,9 @@ const newArr = [...arr, 4, 5];`,
                 difficulty: 3.5
             },
             {
-                code: `const sql = \`
-  SELECT * FROM users
-  WHERE active = true
-  LIMIT 10;
-\`;`,
+                code: `const sql = 'SELECT * FROM users ' +
+  'WHERE active = true ' +
+  'LIMIT 10';`,
                 difficulty: 4
             },
             {
@@ -987,7 +985,7 @@ const newArr = [...arr, 4, 5];`,
                 code: `const user = {
   name: 'Dev',
   greet() {
-    return \`Hello, \${this.name}!\`;
+    return 'Hello, ' + this.name + '!';
   }
 };`,
                 difficulty: 5.5
