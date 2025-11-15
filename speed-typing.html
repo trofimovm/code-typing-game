@@ -2622,7 +2622,8 @@ async function consumeEvents() {
             const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
 
             // Update final screen data
-            document.getElementById('finalRoundsCompleted').textContent = currentRound;
+            // currentRound is the round that was started, so completed rounds = currentRound - 1
+            document.getElementById('finalRoundsCompleted').textContent = Math.max(0, currentRound - 1);
             document.getElementById('finalTimeSpent').textContent = timeString;
 
             // Set final screen title based on game mode
