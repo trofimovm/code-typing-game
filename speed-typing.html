@@ -2463,13 +2463,13 @@ async function consumeEvents() {
             const userCode = editor.getValue();
 
             if (gameMode === 'typing') {
-                // Нормализуем код для сравнения: убираем пробелы в конце строк и в конце файла
+                // Нормализуем код для сравнения: убираем пробелы в начале и конце строк
                 const normalizeCode = (code) => {
                     return code
                         .split('\n')
-                        .map(line => line.trimEnd())
+                        .map(line => line.trim())
                         .join('\n')
-                        .trimEnd();
+                        .trim();
                 };
 
                 const normalizedUserCode = normalizeCode(userCode);
