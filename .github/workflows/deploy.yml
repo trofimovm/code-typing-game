@@ -27,7 +27,7 @@ jobs:
       - name: List files to be deployed
         run: |
           echo "Files to deploy:"
-          ls -lh *.html fonts/
+          ls -lh *.html *.svg fonts/
 
       - name: Upload files to bucket
         run: |
@@ -41,6 +41,19 @@ jobs:
               --key "$file" \
               --body "$file" \
               --content-type "text/html; charset=utf-8" || exit 1
+          done
+
+          # Upload SVG files (favicon, etc)
+          echo "Uploading SVG files..."
+          for svg in *.svg; do
+            if [ -f "$svg" ]; then
+              echo "  Uploading $svg..."
+              yc storage s3api put-object \
+                --bucket "$BUCKET_NAME" \
+                --key "$svg" \
+                --body "$svg" \
+                --content-type "image/svg+xml" || exit 1
+            fi
           done
 
           # Upload fonts

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>СКОРОСТНОЙ НАБОР | MWS Code Challenge ⚡</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <style>
         /* MTS Fonts */
         @font-face {
@@ -2426,7 +2427,7 @@ async function consumeEvents() {
                 const snippetIndex = (currentRound - 1) % codeSnippets.length;
                 const snippet = codeSnippets[snippetIndex];
                 currentTargetCode = snippet.code;
-                document.getElementById('targetCode').textContent = currentTargetCode;
+                document.getElementById('targetCode').innerText = currentTargetCode;
                 editor.setValue('');
             } else {
                 // Cycle through bug scenarios if we exceed the array length
@@ -2547,7 +2548,8 @@ async function consumeEvents() {
             let difficulty, basePoints, roundScore, message;
 
             if (gameMode === 'typing') {
-                const snippet = codeSnippets[currentRound - 1];
+                const snippetIndex = (currentRound - 1) % codeSnippets.length;
+                const snippet = codeSnippets[snippetIndex];
                 difficulty = snippet.difficulty;
                 basePoints = 1000;
                 const timeBonus = Math.max(1, 10 / elapsed);
@@ -2562,7 +2564,8 @@ async function consumeEvents() {
                     message = `👍 Неплохо! +${roundScore} очков!`;
                 }
             } else {
-                const scenario = bugScenarios[currentRound - 1];
+                const scenarioIndex = (currentRound - 1) % bugScenarios.length;
+                const scenario = bugScenarios[scenarioIndex];
                 difficulty = scenario.difficulty;
                 basePoints = 2000; // Bug fixing дает больше очков!
 
