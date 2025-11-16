@@ -2273,6 +2273,7 @@ async function consumeEvents() {
         let editor;
         let bonusEditor;
         let currentRound = 0;
+        let roundsCompleted = 0; // Count of successfully completed rounds
         let startTime;
         let timerInterval;
         let currentTargetCode = '';
@@ -2592,6 +2593,8 @@ async function consumeEvents() {
             document.getElementById('feedback').textContent = message;
             document.getElementById('feedback').className = 'feedback perfect';
 
+            roundsCompleted++; // Increment completed rounds counter
+
             updateStats();
 
             setTimeout(() => {
@@ -2626,7 +2629,7 @@ async function consumeEvents() {
             const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
 
             // Update final screen data
-            document.getElementById('finalRoundsCompleted').textContent = currentRound;
+            document.getElementById('finalRoundsCompleted').textContent = roundsCompleted;
             document.getElementById('finalTimeSpent').textContent = timeString;
 
             // Set title based on game mode
@@ -2635,10 +2638,10 @@ async function consumeEvents() {
                 document.getElementById('finalModeMessage').textContent = 'Победитель определяется по наибольшему количеству раундов';
             } else if (gameMode === 'bugHunting') {
                 document.getElementById('finalTitle').textContent = '🐛 Код-Хантинг завершен!';
-                document.getElementById('finalModeMessage').textContent = `Отличная работа! Вы исправили ${currentRound} ${currentRound === 1 ? 'баг' : currentRound < 5 ? 'бага' : 'багов'}!`;
+                document.getElementById('finalModeMessage').textContent = `Отличная работа! Вы исправили ${roundsCompleted} ${roundsCompleted === 1 ? 'баг' : roundsCompleted < 5 ? 'бага' : 'багов'}!`;
             } else if (gameMode === 'architect') {
                 document.getElementById('finalTitle').textContent = '🏗️ ТЕКИ LOW-КОДИНГ завершен!';
-                document.getElementById('finalModeMessage').textContent = `Пройдено уровней: ${currentRound}/7`;
+                document.getElementById('finalModeMessage').textContent = `Пройдено уровней: ${roundsCompleted}/7`;
             }
 
             // Show final screen
@@ -2678,6 +2681,7 @@ async function consumeEvents() {
             document.getElementById('architectArea').style.display = 'block';
             document.getElementById('finishBtn').style.display = 'block';
             currentRound = 0;
+            roundsCompleted = 0;
             attemptsRemaining = 5;
             penalties = [];
             updateAttemptsDisplay();

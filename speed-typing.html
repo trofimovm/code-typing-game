@@ -2346,6 +2346,8 @@ async function consumeEvents() {
         let editor;
         let bonusEditor;
         let currentRound = 0;
+            roundsCompleted = 0;
+        let roundsCompleted = 0; // Count of successfully completed rounds
         let startTime;
         let timerInterval;
         let currentTargetCode = '';
@@ -2446,6 +2448,7 @@ async function consumeEvents() {
             document.getElementById('codeLabel').textContent = 'Напечатайте этот код:';
             document.getElementById('bugDescription').style.display = 'none';
             currentRound = 0;
+            roundsCompleted = 0;
             totalScore = 0;
             startActivityTimer(10); // 10 minutes for testing
             nextRound();
@@ -2480,6 +2483,7 @@ async function consumeEvents() {
             document.getElementById('codeLabel').textContent = 'Баг в этом коде:';
             document.getElementById('bugDescription').style.display = 'block';
             currentRound = 0;
+            roundsCompleted = 0;
             totalScore = 0;
             startActivityTimer(10); // 10 minutes for testing
             nextRound();
@@ -2558,6 +2562,8 @@ async function consumeEvents() {
                     // Правильный ввод
                     document.getElementById('feedback').textContent = '✓ Отлично!';
                     document.getElementById('feedback').className = 'feedback perfect';
+
+            roundsCompleted++; // Increment completed rounds counter
                 } else {
                     // Ошибка
                     document.getElementById('feedback').textContent = '✗ Ошибка! Проверьте код';
@@ -2668,6 +2674,8 @@ async function consumeEvents() {
             document.getElementById('feedback').textContent = message;
             document.getElementById('feedback').className = 'feedback perfect';
 
+            roundsCompleted++; // Increment completed rounds counter
+
             updateStats();
 
             setTimeout(() => {
@@ -2734,6 +2742,7 @@ async function consumeEvents() {
             document.getElementById('startScreen').style.display = 'flex';
             document.getElementById('finishBtn').style.display = 'none';
             currentRound = 0;
+            roundsCompleted = 0;
             attemptsRemaining = 5;
             penalties = [];
         }
@@ -2753,6 +2762,7 @@ async function consumeEvents() {
             document.getElementById('architectArea').style.display = 'block';
             document.getElementById('finishBtn').style.display = 'block';
             currentRound = 0;
+            roundsCompleted = 0;
             totalScore = 0;
             attemptsRemaining = 5;
             penalties = [];
