@@ -2550,7 +2550,7 @@ async function consumeEvents() {
         let selectedBlock = null;
         let connectingMode = false;
 
-        // Bonus config state
+        // Config editing state
         let currentBonusLevel = null;
 
         require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
@@ -2578,7 +2578,7 @@ async function consumeEvents() {
                 checkCode();
             });
 
-            // Создаем бонусный редактор
+            // Создаем редактор для конфигураций
             bonusEditor = monaco.editor.create(document.getElementById('bonusEditor'), {
                 value: '',
                 language: 'yaml',
@@ -2826,7 +2826,6 @@ async function consumeEvents() {
                 difficulty = scenario.difficulty;
                 basePoints = 2000; // Bug fixing
 
-                // Бонус за скорость исправления
                 const timeBonus = Math.max(1, 30 / elapsed); // Больше времени на поиск бага
                 const roundMultiplier = currentRound;
                 roundScore = Math.round(basePoints * timeBonus * difficulty * roundMultiplier);
@@ -3605,7 +3604,7 @@ async function consumeEvents() {
             document.getElementById('architectFeedback').className = 'feedback good';
         }
 
-        // ============ Bonus Config Functions ============
+        // ============ Config Editing Functions ============
 
         function showBonusStage() {
             const level = architectureLevels[currentRound - 1];
@@ -3614,7 +3613,7 @@ async function consumeEvents() {
             // Скрываем architect area
             document.getElementById('architectArea').style.display = 'none';
 
-            // Показываем bonus area
+            // Показываем config area
             document.getElementById('bonusConfigArea').style.display = 'block';
 
             // Устанавливаем подсказку
@@ -3673,7 +3672,7 @@ async function consumeEvents() {
         }
 
         function proceedToNextLevel() {
-            // Скрываем bonus area
+            // Скрываем config area
             document.getElementById('bonusConfigArea').style.display = 'none';
 
             // Показываем architect area
