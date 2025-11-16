@@ -2369,7 +2369,7 @@ async function consumeEvents() {
 
                 if (remaining <= 0) {
                     clearInterval(activityTimerInterval);
-                    showFinalScreen();
+                    showFinalScreen(true); // true = timed out
                 }
             }, 100);
         }
@@ -2621,7 +2621,7 @@ async function consumeEvents() {
             }
         }
 
-        function showFinalScreen() {
+        function showFinalScreen(timedOut = false) {
             clearInterval(timerInterval);
             if (activityTimerInterval) clearInterval(activityTimerInterval);
 
@@ -2631,7 +2631,13 @@ async function consumeEvents() {
             document.getElementById('bonusConfigArea').style.display = 'none';
 
             // Calculate results
-            const elapsedTime = activityStartTime > 0 ? Math.floor((Date.now() - activityStartTime) / 1000) : 0;
+            let elapsedTime = activityStartTime > 0 ? Math.floor((Date.now() - activityStartTime) / 1000) : 0;
+
+            // If timed out automatically, cap at 10 minutes (600 seconds)
+            if (timedOut && elapsedTime > 600) {
+                elapsedTime = 600;
+            }
+
             const minutes = Math.floor(elapsedTime / 60);
             const seconds = elapsedTime % 60;
             const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
