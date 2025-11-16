@@ -2841,7 +2841,6 @@ async function consumeEvents() {
                 }
             }
 
-            totalScore += roundScore;
 
             // Анимация - закомментировано, так как элемент 'score' отсутствует в HTML
             // document.getElementById('score').classList.add('pulse');
@@ -3573,7 +3572,6 @@ async function consumeEvents() {
             const roundScore = Math.round(basePoints * timeBonus * difficultyMultiplier * roundMultiplier);
 
             levelScoreBeforeBonus = roundScore;
-            totalScore += roundScore;
 
             let message = '';
             if (elapsed < 30) {
@@ -3652,7 +3650,6 @@ async function consumeEvents() {
             if (normalize(userConfig) === normalize(correctConfig)) {
                 // Правильно! Даем бонус +50%
                 const bonusPoints = Math.round(levelScoreBeforeBonus * 0.5);
-                totalScore += bonusPoints;
 
                 document.getElementById('bonusFeedback').textContent =
                     `🎉 ОТЛИЧНО! Конфиг исправлен!`;

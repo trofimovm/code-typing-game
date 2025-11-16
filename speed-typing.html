@@ -2708,7 +2708,6 @@ async function consumeEvents() {
             document.getElementById('bugDescription').style.display = 'none';
             currentRound = 0;
             roundsCompleted = 0;
-            totalScore = 0;
             startActivityTimer(10); // 10 minutes for testing
             nextRound();
         }
@@ -2743,7 +2742,6 @@ async function consumeEvents() {
             document.getElementById('bugDescription').style.display = 'block';
             currentRound = 0;
             roundsCompleted = 0;
-            totalScore = 0;
             startActivityTimer(10); // 10 minutes for testing
             nextRound();
         }
@@ -2922,7 +2920,6 @@ async function consumeEvents() {
                 }
             }
 
-            totalScore += roundScore;
 
             // Анимация - закомментировано, так как элемент 'score' отсутствует в HTML
             // document.getElementById('score').classList.add('pulse');
@@ -3022,7 +3019,6 @@ async function consumeEvents() {
             document.getElementById('finishBtn').style.display = 'block';
             currentRound = 0;
             roundsCompleted = 0;
-            totalScore = 0;
             attemptsRemaining = 5;
             penalties = [];
             updateAttemptsDisplay();
@@ -3655,7 +3651,6 @@ async function consumeEvents() {
             const roundScore = Math.round(basePoints * timeBonus * difficultyMultiplier * roundMultiplier);
 
             levelScoreBeforeBonus = roundScore;
-            totalScore += roundScore;
 
             let message = '';
             if (elapsed < 30) {
@@ -3734,7 +3729,6 @@ async function consumeEvents() {
             if (normalize(userConfig) === normalize(correctConfig)) {
                 // Правильно! Даем бонус +50%
                 const bonusPoints = Math.round(levelScoreBeforeBonus * 0.5);
-                totalScore += bonusPoints;
 
                 document.getElementById('bonusFeedback').textContent =
                     `🎉 ОТЛИЧНО! Конфиг исправлен!`;
