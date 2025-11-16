@@ -3650,10 +3650,14 @@ async function consumeEvents() {
                     proceedToNextLevel();
                 }, 3000);
             } else {
-                // Неправильно
-                document.getElementById('bonusFeedback').textContent =
-                    '❌ Не совсем правильно. Попробуйте еще раз или пропустите.';
-                document.getElementById('bonusFeedback').className = 'feedback error';
+                // Неправильно - начисляем штраф
+                handleArchitectureError('❌ Конфиг неправильный! Попробуйте еще раз или пропустите.');
+
+                // Показываем сообщение в bonusFeedback
+                const feedbackEl = document.getElementById('bonusFeedback');
+                const architectFeedback = document.getElementById('architectFeedback').innerHTML;
+                feedbackEl.innerHTML = architectFeedback;
+                feedbackEl.className = 'feedback error';
 
                 document.querySelector('.controls').classList.add('shake');
                 setTimeout(() => {
