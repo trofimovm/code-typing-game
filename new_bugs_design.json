@@ -1,0 +1,84 @@
+{
+  "javascript": [
+    {
+      "id": 1,
+      "title": "Забыт return (старый - ПРОБЛЕМНЫЙ)",
+      "buggyCode": "function add(a, b) {\n  const result = a + b;\n}",
+      "fixedCode": "function add(a, b) {\n  const result = a + b;\n  return result;\n}",
+      "issue": "Можно решить как 'return result' или 'return a + b'",
+      "keep": false
+    },
+    {
+      "id": 2,
+      "title": "Забыт return в filter (старый - ПРОБЛЕМНЫЙ)",
+      "buggyCode": "const even = numbers.filter(n => {\n  n % 2 === 0;\n});",
+      "fixedCode": "const even = numbers.filter(n => {\n  return n % 2 === 0;\n});",
+      "issue": "Можно убрать фигурные скобки или добавить return",
+      "keep": false
+    },
+    {
+      "id": 3,
+      "title": "Бесконечный цикл (старый - ОЧЕНЬ ПРОБЛЕМНЫЙ)",
+      "buggyCode": "let count = 0;\nwhile (count < 5) {\n  console.log(count);\n}",
+      "fixedCode": "let count = 0;\nwhile (count < 5) {\n  console.log(count);\n  count++;\n}",
+      "issue": "count++, ++count, count+=1, count=count+1 - 4 варианта!",
+      "keep": false
+    },
+    {
+      "id": 4,
+      "title": "Забыт await (старый - ХОРОШИЙ ✓)",
+      "buggyCode": "async function getData() {\n  const response = fetch('/api');\n  const data = response.json();\n  return data;\n}",
+      "fixedCode": "async function getData() {\n  const response = await fetch('/api');\n  const data = await response.json();\n  return data;\n}",
+      "issue": "Решение однозначно - добавить await",
+      "keep": true
+    },
+    {
+      "id": 5,
+      "title": "Мутация объекта (старый - ПРОБЛЕМНЫЙ)",
+      "buggyCode": "function updateCount(state, n) {\n  state.count = n;\n  return state;\n}",
+      "fixedCode": "function updateCount(state, n) {\n  return { ...state, count: n };\n}",
+      "issue": "Можно {...state, count: n} или Object.assign",
+      "keep": false
+    },
+    {
+      "id": 6,
+      "title": "Опечатка в имени переменной (НОВЫЙ ✓)",
+      "buggyCode": "const items = [1, 2, 3, 4, 5];\nconst count = itmes.length;\nconsole.log(count);",
+      "fixedCode": "const items = [1, 2, 3, 4, 5];\nconst count = items.length;\nconsole.log(count);",
+      "issue": "ЕДИНСТВЕННОЕ решение: itmes → items",
+      "keep": true
+    },
+    {
+      "id": 7,
+      "title": "Неправильное условие цикла (НОВЫЙ ✓)",
+      "buggyCode": "let count = 0;\nwhile (count > 5) {\n  console.log(count);\n  count++;\n}\nconsole.log('Done');",
+      "fixedCode": "let count = 0;\nwhile (count < 5) {\n  console.log(count);\n  count++;\n}\nconsole.log('Done');",
+      "issue": "ЕДИНСТВЕННОЕ решение: > → <",
+      "keep": true
+    },
+    {
+      "id": 8,
+      "title": "Неправильная индексация массива (НОВЫЙ ✓)",
+      "buggyCode": "const numbers = [10, 20, 30, 40];\nconst first = numbers[1];\nconsole.log(first);",
+      "fixedCode": "const numbers = [10, 20, 30, 40];\nconst first = numbers[0];\nconsole.log(first);",
+      "issue": "ЕДИНСТВЕННОЕ решение: [1] → [0]",
+      "keep": true
+    },
+    {
+      "id": 9,
+      "title": "Неправильная операция (НОВЫЙ ✓)",
+      "buggyCode": "function sum(a, b) {\n  const result = a * b;\n  return result;\n}",
+      "fixedCode": "function sum(a, b) {\n  const result = a + b;\n  return result;\n}",
+      "issue": "ЕДИНСТВЕННОЕ решение: * → +",
+      "keep": true
+    },
+    {
+      "id": 10,
+      "title": "Неправильный порядок операндов (НОВЫЙ ✓)",
+      "buggyCode": "function subtract(a, b) {\n  return b - a;\n}",
+      "fixedCode": "function subtract(a, b) {\n  return a - b;\n}",
+      "issue": "ЕДИНСТВЕННОЕ решение: b - a → a - b",
+      "keep": true
+    }
+  ]
+}

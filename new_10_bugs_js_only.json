@@ -1,0 +1,74 @@
+{
+  "javascript": [
+    {
+      "description": "Promise не ожидается - данные не получаются (2 бага)",
+      "buggyCode": "async function getData() {\n  const response = fetch('/api/data');\n  const data = response.json();\n  return data;\n}",
+      "fixedCode": "async function getData() {\n  const response = await fetch('/api/data');\n  const data = await response.json();\n  return data;\n}",
+      "difficulty": 2,
+      "hint": "Async функции должны await'ить промисы"
+    },
+    {
+      "description": "Опечатка в имени переменной - ReferenceError",
+      "buggyCode": "const items = [1, 2, 3, 4, 5];\nconst count = itmes.length;\nconsole.log(count);",
+      "fixedCode": "const items = [1, 2, 3, 4, 5];\nconst count = items.length;\nconsole.log(count);",
+      "difficulty": 1,
+      "hint": "Проверьте имя переменной внимательно"
+    },
+    {
+      "description": "Неправильное условие - цикл никогда не выполнится",
+      "buggyCode": "let count = 0;\nwhile (count > 5) {\n  console.log(count);\n  count++;\n}\nconsole.log('Done');",
+      "fixedCode": "let count = 0;\nwhile (count < 5) {\n  console.log(count);\n  count++;\n}\nconsole.log('Done');",
+      "difficulty": 1.5,
+      "hint": "Проверьте знак сравнения в условии"
+    },
+    {
+      "description": "Неправильный индекс - берется второй элемент вместо первого",
+      "buggyCode": "const numbers = [10, 20, 30, 40];\nconst first = numbers[1];\nconsole.log(first);",
+      "fixedCode": "const numbers = [10, 20, 30, 40];\nconst first = numbers[0];\nconsole.log(first);",
+      "difficulty": 1,
+      "hint": "Массивы индексируются с 0"
+    },
+    {
+      "description": "Неправильная операция - умножение вместо сложения",
+      "buggyCode": "function sum(a, b) {\n  const result = a * b;\n  return result;\n}\nsum(5, 3);",
+      "fixedCode": "function sum(a, b) {\n  const result = a + b;\n  return result;\n}\nsum(5, 3);",
+      "difficulty": 1,
+      "hint": "Проверьте арифметическую операцию"
+    },
+    {
+      "description": "Неправильный порядок операндов при вычитании",
+      "buggyCode": "function subtract(a, b) {\n  return b - a;\n}\nsubtract(10, 3);",
+      "fixedCode": "function subtract(a, b) {\n  return a - b;\n}\nsubtract(10, 3);",
+      "difficulty": 1.5,
+      "hint": "Порядок операндов имеет значение"
+    },
+    {
+      "description": "Неправильный начальный индекс - цикл начинается с 1",
+      "buggyCode": "const items = [];\nfor (let i = 1; i < 5; i++) {\n  items.push(i);\n}\nconsole.log(items);",
+      "fixedCode": "const items = [];\nfor (let i = 0; i < 5; i++) {\n  items.push(i);\n}\nconsole.log(items);",
+      "difficulty": 1.5,
+      "hint": "С какого значения должен начинаться счетчик?"
+    },
+    {
+      "description": "Неправильный логический оператор - ИЛИ вместо И",
+      "buggyCode": "function isValid(age) {\n  if (age > 18 || age < 65) {\n    return true;\n  }\n  return false;\n}",
+      "fixedCode": "function isValid(age) {\n  if (age > 18 && age < 65) {\n    return true;\n  }\n  return false;\n}",
+      "difficulty": 2,
+      "hint": "Нужна ли конъюнкция или дизъюнкция?"
+    },
+    {
+      "description": "Неправильный оператор - деление вместо остатка",
+      "buggyCode": "function isEven(n) {\n  return n / 2 === 0;\n}\nisEven(4);",
+      "fixedCode": "function isEven(n) {\n  return n % 2 === 0;\n}\nisEven(4);",
+      "difficulty": 1.5,
+      "hint": "Какой оператор проверяет остаток от деления?"
+    },
+    {
+      "description": "Неправильная переменная в цикле - всегда берется первый элемент",
+      "buggyCode": "const numbers = [10, 20, 30];\nfor (let i = 0; i < numbers.length; i++) {\n  const value = numbers[0];\n  console.log(value);\n}",
+      "fixedCode": "const numbers = [10, 20, 30];\nfor (let i = 0; i < numbers.length; i++) {\n  const value = numbers[i];\n  console.log(value);\n}",
+      "difficulty": 1.5,
+      "hint": "Используйте переменную цикла для индексации"
+    }
+  ]
+}

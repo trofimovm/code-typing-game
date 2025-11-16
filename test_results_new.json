@@ -1,0 +1,27 @@
+{
+  "javascript": {
+    "rounds_completed": 10,
+    "errors": [],
+    "success": true
+  },
+  "python": {
+    "rounds_completed": 10,
+    "errors": [],
+    "success": true
+  },
+  "cpp": {
+    "rounds_completed": 10,
+    "errors": [],
+    "success": true
+  },
+  "csharp": {
+    "rounds_completed": 10,
+    "errors": [],
+    "success": true
+  },
+  "java": {
+    "rounds_completed": 10,
+    "errors": [],
+    "success": true
+  }
+}
