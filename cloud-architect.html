@@ -2603,15 +2603,6 @@ async function consumeEvents() {
             document.getElementById('round').textContent = currentRound;
         }
 
-        function updateDrinkIcon() {
-            const drinkIcon = document.getElementById('drinkIcon');
-            drinkIcon.classList.remove('drink-icon-locked', 'drink-icon-unlocked');
-            if (drinkEarned) {
-                drinkIcon.classList.add('drink-icon-unlocked');
-            } else {
-                drinkIcon.classList.add('drink-icon-locked');
-            }
-        }
 
         function showFinalScreen(timedOut = false) {
             clearInterval(timerInterval);
@@ -2638,42 +2629,17 @@ async function consumeEvents() {
             document.getElementById('finalRoundsCompleted').textContent = currentRound;
             document.getElementById('finalTimeSpent').textContent = timeString;
 
-            // Determine drink unlock status based on game mode
-            let reason = '';
+            // Set title based on game mode
             if (gameMode === 'typing') {
-                // Speed Typing: winner determined externally
                 document.getElementById('finalTitle').textContent = '⚡ Скоростной набор завершен!';
                 document.getElementById('finalModeMessage').textContent = 'Победитель определяется по наибольшему количеству раундов';
             } else if (gameMode === 'bugHunting') {
-                // Bug Hunter: minimum 3 rounds required
                 document.getElementById('finalTitle').textContent = '🐛 Код-Хантинг завершен!';
-                const MIN_ROUNDS = 3;
-                if (!drinkEarned) {
-                    reason = `Требуется минимум ${MIN_ROUNDS} раунда (пройдено: ${currentRound})`;
-                }
+                document.getElementById('finalModeMessage').textContent = `Отличная работа! Вы исправили ${currentRound} ${currentRound === 1 ? 'баг' : currentRound < 5 ? 'бага' : 'багов'}!`;
             } else if (gameMode === 'architect') {
-                // ТЕКИ LOW-КОДИНГ: all 7 levels within 5 attempts
                 document.getElementById('finalTitle').textContent = '🏗️ ТЕКИ LOW-КОДИНГ завершен!';
-                if (!drinkEarned) {
-                    if (currentRound < 7) {
-                        reason = `Не все уровни пройдены (${currentRound}/7)`;
-                    } else {
-                        reason = 'Превышен лимит попыток';
-                    }
-                }
+                document.getElementById('finalModeMessage').textContent = `Пройдено уровней: ${currentRound}/7`;
             }
-
-            // Show drink status
-            if (drinkEarned) {
-                document.getElementById('drinkUnlocked').style.display = 'block';
-                document.getElementById('drinkLocked').style.display = 'none';
-            } else {
-                document.getElementById('drinkUnlocked').style.display = 'none';
-                document.getElementById('drinkLocked').style.display = 'block';
-                document.getElementById('drinkReason').textContent = reason;
-            }
-
-            // Update header drink icon
 
             // Show final screen
             document.getElementById('finalScreen').classList.add('show');
