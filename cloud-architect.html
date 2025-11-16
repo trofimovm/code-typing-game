@@ -1098,7 +1098,7 @@
         <div id="bonusConfigArea" style="display: none;">
             <div style="padding: 15px 30px;">
                 <div class="code-display" style="margin-bottom: 15px; padding: 15px; text-align: center;">
-                    <div style="font-size: 28px; color: #ff0032; font-weight: bold; margin-bottom: 10px;">🎁 БОНУСНЫЙ ЭТАП!</div>
+                    <div style="font-size: 28px; color: #ff0032; font-weight: bold; margin-bottom: 10px;">⚙️ ИСПРАВЬТЕ КОНФИГУРАЦИЮ!</div>
                     <div style="font-size: 16px; color: #666; margin-bottom: 8px;">Исправьте конфигурацию!</div>
                     <div id="bonusHint" style="font-size: 14px; color: #333; background: #fff9e6; padding: 10px; border-radius: 5px; border: 1px solid #ffd700;"></div>
                 </div>
@@ -2552,7 +2552,6 @@ async function consumeEvents() {
 
         // Bonus config state
         let currentBonusLevel = null;
-        let levelScoreBeforeBonus = 0;
 
         require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
 
@@ -3564,15 +3563,6 @@ async function consumeEvents() {
             const elapsed = (Date.now() - startTime) / 1000;
             const level = architectureLevels[currentRound - 1];
 
-            // Система очков
-            const basePoints = 3000;
-            const timeBonus = Math.max(1, 60 / elapsed);
-            const difficultyMultiplier = level.difficulty;
-            const roundMultiplier = currentRound;
-            const roundScore = Math.round(basePoints * timeBonus * difficultyMultiplier * roundMultiplier);
-
-            levelScoreBeforeBonus = roundScore;
-
             let message = '';
             if (elapsed < 30) {
                 message = `🏆 АРХИТЕКТОР ГОДА!`;
@@ -3593,7 +3583,7 @@ async function consumeEvents() {
 
             updateStats();
 
-            // Показываем бонусный этап вместо перехода к следующему уровню
+            // Показываем раунд конфигурации
             setTimeout(() => {
                 showBonusStage();
             }, 2500);
@@ -3648,18 +3638,10 @@ async function consumeEvents() {
             const normalize = (str) => str.trim().replace(/\s+/g, ' ');
 
             if (normalize(userConfig) === normalize(correctConfig)) {
-                // Правильно! Даем бонус +50%
-                const bonusPoints = Math.round(levelScoreBeforeBonus * 0.5);
-
+                // Правильно!
                 document.getElementById('bonusFeedback').textContent =
                     `🎉 ОТЛИЧНО! Конфиг исправлен!`;
                 document.getElementById('bonusFeedback').className = 'feedback perfect';
-
-                // Анимация
-                document.getElementById('score').classList.add('pulse');
-                setTimeout(() => {
-                    document.getElementById('score').classList.remove('pulse');
-                }, 500);
 
                 updateStats();
 
@@ -3682,7 +3664,7 @@ async function consumeEvents() {
 
         function skipBonus() {
             document.getElementById('bonusFeedback').textContent =
-                'Бонусный этап пропущен. Переходим к следующему уровню...';
+                'Конфигурация пропущена. Переходим к следующему уровню...';
             document.getElementById('bonusFeedback').className = 'feedback';
 
             setTimeout(() => {
