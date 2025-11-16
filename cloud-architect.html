@@ -840,7 +840,7 @@
             <div style="padding: 15px 30px;">
                 <div class="code-display" style="margin-bottom: 15px; padding: 15px; text-align: center;">
                     <div style="font-size: 28px; color: #ff0032; font-weight: bold; margin-bottom: 10px;">🎁 БОНУСНЫЙ ЭТАП!</div>
-                    <div style="font-size: 16px; color: #666; margin-bottom: 8px;">Исправьте конфигурацию и получите +50% очков!</div>
+                    <div style="font-size: 16px; color: #666; margin-bottom: 8px;">Исправьте конфигурацию!</div>
                     <div id="bonusHint" style="font-size: 14px; color: #333; background: #fff9e6; padding: 10px; border-radius: 5px; border: 1px solid #ffd700;"></div>
                 </div>
 
@@ -2555,16 +2555,16 @@ async function consumeEvents() {
                 roundScore = Math.round(basePoints * timeBonus * difficulty * roundMultiplier);
 
                 if (elapsed < 5) {
-                    message = `🔥 ОГОНЬ! +${roundScore} очков!`;
+                    message = `🔥 ОГОНЬ!`;
                 } else if (elapsed < 10) {
-                    message = `⚡ Быстро! +${roundScore} очков!`;
+                    message = `⚡ Быстро!`;
                 } else {
-                    message = `👍 Неплохо! +${roundScore} очков!`;
+                    message = `👍 Неплохо!`;
                 }
             } else {
                 const scenario = bugScenarios[currentRound - 1];
                 difficulty = scenario.difficulty;
-                basePoints = 2000; // Bug fixing дает больше очков!
+                basePoints = 2000; // Bug fixing
 
                 // Бонус за скорость исправления
                 const timeBonus = Math.max(1, 30 / elapsed); // Больше времени на поиск бага
@@ -2572,11 +2572,11 @@ async function consumeEvents() {
                 roundScore = Math.round(basePoints * timeBonus * difficulty * roundMultiplier);
 
                 if (elapsed < 20) {
-                    message = `🏆 МАСТЕР ДЕБАГА! +${roundScore} очков!`;
+                    message = `🏆 МАСТЕР ДЕБАГА!`;
                 } else if (elapsed < 40) {
-                    message = `🔍 Баг найден! +${roundScore} очков!`;
+                    message = `🔍 Баг найден!`;
                 } else {
-                    message = `✅ Исправлено! +${roundScore} очков!`;
+                    message = `✅ Исправлено!`;
                 }
             }
 
@@ -3347,11 +3347,11 @@ async function consumeEvents() {
 
             let message = '';
             if (elapsed < 30) {
-                message = `🏆 АРХИТЕКТОР ГОДА! +${roundScore} очков!`;
+                message = `🏆 АРХИТЕКТОР ГОДА!`;
             } else if (elapsed < 60) {
-                message = `⚡ БЫСТРО! +${roundScore} очков!`;
+                message = `⚡ БЫСТРО!`;
             } else {
-                message = `✅ АРХИТЕКТУРА ГОТОВА! +${roundScore} очков!`;
+                message = `✅ АРХИТЕКТУРА ГОТОВА!`;
             }
 
             document.getElementById('architectFeedback').textContent = message;
@@ -3425,7 +3425,7 @@ async function consumeEvents() {
                 totalScore += bonusPoints;
 
                 document.getElementById('bonusFeedback').textContent =
-                    `🎉 ОТЛИЧНО! Конфиг исправлен! Бонус +${bonusPoints} очков! (50% от ${levelScoreBeforeBonus})`;
+                    `🎉 ОТЛИЧНО! Конфиг исправлен!`;
                 document.getElementById('bonusFeedback').className = 'feedback perfect';
 
                 // Анимация
