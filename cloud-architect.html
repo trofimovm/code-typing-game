@@ -2562,7 +2562,8 @@ async function consumeEvents() {
                     message = `👍 Неплохо!`;
                 }
             } else {
-                const scenario = bugScenarios[currentRound - 1];
+                const scenarioIndex = (currentRound - 1) % bugScenarios.length;
+                const scenario = bugScenarios[scenarioIndex];
                 difficulty = scenario.difficulty;
                 basePoints = 2000; // Bug fixing
 
