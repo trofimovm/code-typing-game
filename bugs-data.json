@@ -359,5 +359,76 @@
       "hint": "Используйте переменную цикла"
     }
   ],
-  "golang": []
+  "golang": [
+    {
+      "description": "Goroutine не ждет завершения - канал не получает результат",
+      "buggyCode": "package main\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nfunc getData() int {\n\ttime.Sleep(1 * time.Second)\n\treturn 42\n}\n\nfunc main() {\n\tresult := make(chan int)\n\tgo func() {\n\t\tgetData()\n\t}()\n\tfmt.Println(<-result)\n}",
+      "fixedCode": "package main\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nfunc getData() int {\n\ttime.Sleep(1 * time.Second)\n\treturn 42\n}\n\nfunc main() {\n\tresult := make(chan int)\n\tgo func() {\n\t\tresult <- getData()\n\t}()\n\tfmt.Println(<-result)\n}",
+      "difficulty": 2,
+      "hint": "Отправьте результат в канал через <-"
+    },
+    {
+      "description": "Опечатка в имени переменной",
+      "buggyCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\titems := []int{1, 2, 3, 4, 5}\n\tcount := len(itmes)\n\tfmt.Println(count)\n}",
+      "fixedCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\titems := []int{1, 2, 3, 4, 5}\n\tcount := len(items)\n\tfmt.Println(count)\n}",
+      "difficulty": 1,
+      "hint": "Проверьте имя переменной внимательно"
+    },
+    {
+      "description": "Неправильное условие - цикл никогда не выполнится",
+      "buggyCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tcount := 0\n\tfor count > 5 {\n\t\tfmt.Println(count)\n\t\tcount++\n\t}\n\tfmt.Println(\"Done\")\n}",
+      "fixedCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tcount := 0\n\tfor count < 5 {\n\t\tfmt.Println(count)\n\t\tcount++\n\t}\n\tfmt.Println(\"Done\")\n}",
+      "difficulty": 1.5,
+      "hint": "Проверьте знак сравнения в условии"
+    },
+    {
+      "description": "Неправильный индекс - берется второй элемент вместо первого",
+      "buggyCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnumbers := []int{10, 20, 30, 40}\n\tfirst := numbers[1]\n\tfmt.Println(first)\n}",
+      "fixedCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnumbers := []int{10, 20, 30, 40}\n\tfirst := numbers[0]\n\tfmt.Println(first)\n}",
+      "difficulty": 1,
+      "hint": "Слайсы индексируются с 0"
+    },
+    {
+      "description": "Неправильная операция - умножение вместо сложения",
+      "buggyCode": "package main\n\nfunc sum(a, b int) int {\n\tresult := a * b\n\treturn result\n}\n\nfunc main() {\n\tsum(5, 3)\n}",
+      "fixedCode": "package main\n\nfunc sum(a, b int) int {\n\tresult := a + b\n\treturn result\n}\n\nfunc main() {\n\tsum(5, 3)\n}",
+      "difficulty": 1,
+      "hint": "Проверьте арифметическую операцию"
+    },
+    {
+      "description": "Неправильный порядок операндов при вычитании",
+      "buggyCode": "package main\n\nfunc subtract(a, b int) int {\n\treturn b - a\n}\n\nfunc main() {\n\tsubtract(10, 3)\n}",
+      "fixedCode": "package main\n\nfunc subtract(a, b int) int {\n\treturn a - b\n}\n\nfunc main() {\n\tsubtract(10, 3)\n}",
+      "difficulty": 1.5,
+      "hint": "Порядок операндов имеет значение"
+    },
+    {
+      "description": "Неправильный начальный индекс - цикл начинается с 1",
+      "buggyCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\titems := []int{}\n\tfor i := 1; i < 5; i++ {\n\t\titems = append(items, i)\n\t}\n\tfmt.Println(items)\n}",
+      "fixedCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\titems := []int{}\n\tfor i := 0; i < 5; i++ {\n\t\titems = append(items, i)\n\t}\n\tfmt.Println(items)\n}",
+      "difficulty": 1.5,
+      "hint": "С какого значения должен начинаться счетчик?"
+    },
+    {
+      "description": "Неправильный логический оператор - ИЛИ вместо И",
+      "buggyCode": "package main\n\nfunc isValid(age int) bool {\n\tif age > 18 || age < 65 {\n\t\treturn true\n\t}\n\treturn false\n}",
+      "fixedCode": "package main\n\nfunc isValid(age int) bool {\n\tif age > 18 && age < 65 {\n\t\treturn true\n\t}\n\treturn false\n}",
+      "difficulty": 2,
+      "hint": "Нужна конъюнкция или дизъюнкция?"
+    },
+    {
+      "description": "Неправильный оператор - деление вместо остатка",
+      "buggyCode": "package main\n\nfunc isEven(n int) bool {\n\treturn n / 2 == 0\n}\n\nfunc main() {\n\tisEven(4)\n}",
+      "fixedCode": "package main\n\nfunc isEven(n int) bool {\n\treturn n % 2 == 0\n}\n\nfunc main() {\n\tisEven(4)\n}",
+      "difficulty": 1.5,
+      "hint": "Какой оператор проверяет остаток от деления?"
+    },
+    {
+      "description": "Неправильная переменная в цикле - всегда берется первый элемент",
+      "buggyCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnumbers := []int{10, 20, 30}\n\tfor i := 0; i < len(numbers); i++ {\n\t\tvalue := numbers[0]\n\t\tfmt.Println(value)\n\t}\n}",
+      "fixedCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnumbers := []int{10, 20, 30}\n\tfor i := 0; i < len(numbers); i++ {\n\t\tvalue := numbers[i]\n\t\tfmt.Println(value)\n\t}\n}",
+      "difficulty": 1.5,
+      "hint": "Используйте переменную цикла для индексации"
+    }
+  ]
 }
