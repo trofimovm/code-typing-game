@@ -120,7 +120,7 @@ class BugHunterTester:
             ("cpp", "cpp"),
             ("csharp", "csharp"),
             ("java", "java"),
-            # ("golang", "golang"),  # Пропускаем пока, нет решений
+            ("golang", "golang"),
         ]
 
         async with async_playwright() as p:
