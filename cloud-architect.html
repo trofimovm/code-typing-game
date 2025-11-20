@@ -3637,9 +3637,35 @@ async function consumeEvents() {
                     `Нужно больше соединений (${connections.length}/${level.requiredConnections.length})`;
                 document.getElementById('architectFeedback').className = 'feedback good';
             } else {
-                document.getElementById('architectFeedback').textContent =
-                    `Проверьте архитектуру! Все блоки на месте.`;
-                document.getElementById('architectFeedback').className = 'feedback perfect';
+                // Проверяем корректность соединений, не только количество
+                let correctConnections = 0;
+                level.requiredConnections.forEach(rc => {
+                    const hasConnection = connections.some(
+                        c => c.fromType === rc.from && c.toType === rc.to
+                    );
+                    if (hasConnection) correctConnections++;
+                });
+
+                if (correctConnections === level.requiredConnections.length) {
+                    // Архитектура 100% правильная - автоматический переход
+                    document.getElementById('architectFeedback').textContent =
+                        `✅ Архитектура верна! Автоматический переход...`;
+                    document.getElementById('architectFeedback').className = 'feedback perfect';
+
+                    // Защита от множественных одновременных переходов
+                    if (!window.isAutoAdvancing) {
+                        window.isAutoAdvancing = true;
+                        setTimeout(() => {
+                            architectLevelComplete();
+                            window.isAutoAdvancing = false;
+                        }, 1500); // 1.5 секунды для отображения успеха
+                    }
+                } else {
+                    // Блоки и соединений достаточно, но некоторые неправильные
+                    document.getElementById('architectFeedback').textContent =
+                        `Проверьте соединения! (${correctConnections}/${level.requiredConnections.length} правильных)`;
+                    document.getElementById('architectFeedback').className = 'feedback good';
+                }
             }
         }
 
