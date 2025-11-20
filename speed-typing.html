@@ -2640,6 +2640,7 @@ async function consumeEvents() {
         // New game mechanics
         let activityStartTime = 0;
         let activityTimerInterval = null;
+        let isGameActive = false; // Флаг активности игры для anti-cheat
         let attemptsRemaining = 5; // For Cloud Architect
         let penalties = []; // Penalty history for Cloud Architect
 
@@ -2674,13 +2675,22 @@ async function consumeEvents() {
                 wordBasedSuggestions: false
             });
 
-            // Запретить вставку в редакторе
-            editor.onDidPaste((e) => {
-                e.preventDefault();
-                editor.trigger('keyboard', 'undo');
+            // DOM-защита от вставки (перехватываем ДО Monaco)
+            const editorDomNode = editor.getDomNode();
+            editorDomNode.addEventListener('paste', (e) => {
+                if (isGameActive) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    isGameActive = false;
+                    showFinalScreen(false, 'Попытка вставки кода запрещена', true);
+                }
+            }, { capture: true, passive: false });
 
-                // Если игра активна - завершить с предупреждением
-                if (activityStartTime > 0) {
+            // Fallback защита через Monaco API
+            editor.onDidPaste((e) => {
+                if (isGameActive) {
+                    isGameActive = false;
+                    editor.trigger('keyboard', 'undo');
                     showFinalScreen(false, 'Попытка вставки кода запрещена', true);
                 }
             });
@@ -2717,13 +2727,22 @@ async function consumeEvents() {
                 automaticLayout: true
             });
 
-            // Запретить вставку в бонусном редакторе
-            bonusEditor.onDidPaste((e) => {
-                e.preventDefault();
-                bonusEditor.trigger('keyboard', 'undo');
+            // DOM-защита от вставки для бонусного редактора
+            const bonusEditorDomNode = bonusEditor.getDomNode();
+            bonusEditorDomNode.addEventListener('paste', (e) => {
+                if (isGameActive) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    isGameActive = false;
+                    showFinalScreen(false, 'Попытка вставки кода запрещена', true);
+                }
+            }, { capture: true, passive: false });
 
-                // Если игра активна - завершить с предупреждением
-                if (activityStartTime > 0) {
+            // Fallback защита через Monaco API
+            bonusEditor.onDidPaste((e) => {
+                if (isGameActive) {
+                    isGameActive = false;
+                    bonusEditor.trigger('keyboard', 'undo');
                     showFinalScreen(false, 'Попытка вставки кода запрещена', true);
                 }
             });
@@ -2743,7 +2762,7 @@ async function consumeEvents() {
 
         setInterval(() => {
             // Проверяем только если игра активна
-            if (activityStartTime > 0 && !devToolsOpen) {
+            if (isGameActive && !devToolsOpen) {
                 const widthThreshold = window.outerWidth - window.innerWidth > threshold;
                 const heightThreshold = window.outerHeight - window.innerHeight > threshold;
 
@@ -2754,7 +2773,7 @@ async function consumeEvents() {
             }
 
             // Сбрасываем флаг если игра не активна
-            if (activityStartTime === 0) {
+            if (!isGameActive) {
                 devToolsOpen = false;
             }
         }, 500); // проверка каждые 500мс
@@ -2785,6 +2804,7 @@ async function consumeEvents() {
 
         function startTypingGame() {
             gameMode = 'typing';
+            isGameActive = true;
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('gameArea').style.display = 'block';
             document.getElementById('finishBtn').style.display = 'block';
@@ -2819,6 +2839,7 @@ async function consumeEvents() {
             }
 
             gameMode = 'bugHunting';
+            isGameActive = true;
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('gameArea').style.display = 'block';
             document.getElementById('finishBtn').style.display = 'block';
@@ -3028,6 +3049,7 @@ async function consumeEvents() {
 
         function showFinalScreen(timedOut = false, customMessage = null, isCheatDetected = false) {
             // Останавливаем игру
+            isGameActive = false;
             activityStartTime = 0;
             clearInterval(timerInterval);
             if (activityTimerInterval) clearInterval(activityTimerInterval);
