@@ -1754,6 +1754,7 @@ async function consumeEvents() {
         let activityStartTime = 0;
         let activityTimerInterval = null;
         let isGameActive = false; // Флаг активности игры для anti-cheat
+        let isRoundInTransition = false; // Флаг перехода между раундами (защита от накрутки)
         let attemptsRemaining = 5; // For Cloud Architect
         let penalties = []; // Penalty history for Cloud Architect
 
@@ -1965,6 +1966,14 @@ async function consumeEvents() {
         }
 
         function nextRound() {
+            // Разрешаем проверку кода для нового раунда (сброс защиты)
+            isRoundInTransition = false;
+
+            // Разблокируем редактор для нового раунда
+            if (editor) {
+                editor.updateOptions({ readOnly: false });
+            }
+
             // No round limit for typing and bugHunting - play until timer expires
             // Only architect mode has limited levels (7)
             if (gameMode === 'architect' && currentRound >= 7) {
@@ -2031,7 +2040,7 @@ async function consumeEvents() {
                 const progress = (userCode.length / currentTargetCode.length) * 100;
                 document.getElementById('progress').style.width = Math.min(progress, 100) + '%';
 
-                if (normalizedUserCode === normalizedTargetCode) {
+                if (!isRoundInTransition && normalizedUserCode === normalizedTargetCode) {
                     roundComplete();
                 } else if (normalizedTargetCode.startsWith(normalizedUserCode)) {
                     // Правильный ввод
@@ -2061,7 +2070,7 @@ async function consumeEvents() {
                 const progress = similarity * 100;
                 document.getElementById('progress').style.width = progress + '%';
 
-                if (normalizedUserCode === normalizedTargetCode) {
+                if (!isRoundInTransition && normalizedUserCode === normalizedTargetCode) {
                     roundComplete();
                 } else if (similarity > 0.9) {
                     document.getElementById('feedback').textContent = '🔥 Почти! Еще чуть-чуть!';
@@ -2095,6 +2104,14 @@ async function consumeEvents() {
 
         function roundComplete() {
             clearInterval(timerInterval);
+
+            // Блокируем повторные вызовы roundComplete() (защита от накрутки)
+            isRoundInTransition = true;
+
+            // Блокируем редактор во время перехода (UX защита)
+            if (editor) {
+                editor.updateOptions({ readOnly: true });
+            }
 
             const elapsed = (Date.now() - startTime) / 1000;
 
