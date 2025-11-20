@@ -3833,6 +3833,7 @@ async function consumeEvents() {
             document.getElementById('droppedBlocks').innerHTML = '';
             redrawConnections();
             document.getElementById('architectFeedback').textContent = '';
+            updateAvailableBlocks(); // Обновляем список доступных блоков после очистки
         }
 
         function showHint() {
