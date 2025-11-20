@@ -1134,7 +1134,7 @@
 
                 <div class="controls" style="margin-top: 10px; margin-bottom: 5px;">
                     <button class="btn btn-primary" onclick="checkArchitecture()" id="checkBtn" style="display: none;">Проверить</button>
-                    <button class="btn btn-secondary" onclick="clearCanvas()">Очистить</button>
+                    <button class="btn btn-secondary" onclick="clearCanvas()" id="clearBtn">Очистить</button>
                     <button class="btn btn-secondary" onclick="showHint()" id="hintBtn">Подсказка</button>
                 </div>
 
@@ -3186,6 +3186,12 @@ async function consumeEvents() {
             // Заполнение доступных блоков
             updateAvailableBlocks();
 
+            // Разблокируем кнопки для нового уровня
+            const clearBtn = document.getElementById('clearBtn');
+            const hintBtn = document.getElementById('hintBtn');
+            if (clearBtn) clearBtn.disabled = false;
+            if (hintBtn) hintBtn.disabled = false;
+
             // Настройка canvas для приема блоков
             const canvas = document.getElementById('canvas');
             canvas.addEventListener('dragover', (e) => {
@@ -3701,6 +3707,12 @@ async function consumeEvents() {
                     document.getElementById('architectFeedback').textContent =
                         `✅ Архитектура верна! Автоматический переход...`;
                     document.getElementById('architectFeedback').className = 'feedback perfect';
+
+                    // Блокируем кнопки во время автоматического перехода
+                    const clearBtn = document.getElementById('clearBtn');
+                    const hintBtn = document.getElementById('hintBtn');
+                    if (clearBtn) clearBtn.disabled = true;
+                    if (hintBtn) hintBtn.disabled = true;
 
                     // Защита от множественных одновременных переходов
                     if (!window.isAutoAdvancing) {
