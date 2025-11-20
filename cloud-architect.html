@@ -1133,7 +1133,7 @@
                 </div>
 
                 <div class="controls" style="margin-top: 10px; margin-bottom: 5px;">
-                    <button class="btn btn-primary" onclick="checkArchitecture()" id="checkBtn">Проверить</button>
+                    <button class="btn btn-primary" onclick="checkArchitecture()" id="checkBtn" style="display: none;">Проверить</button>
                     <button class="btn btn-secondary" onclick="clearCanvas()">Очистить</button>
                     <button class="btn btn-secondary" onclick="showHint()" id="hintBtn">Подсказка</button>
                 </div>
@@ -1155,7 +1155,7 @@
                 </div>
 
                 <div class="controls" style="margin-bottom: 10px;">
-                    <button class="btn btn-primary" onclick="checkBonusConfig()">Проверить конфиг 🔍</button>
+                    <button class="btn btn-primary" onclick="checkBonusConfig()" id="checkBonusBtn">Проверить конфиг 🔍</button>
                 </div>
 
                 <div class="feedback" id="bonusFeedback" style="min-height: 25px;"></div>
@@ -3812,9 +3812,18 @@ async function consumeEvents() {
             // Очищаем фидбек
             document.getElementById('bonusFeedback').textContent = '';
             document.getElementById('bonusFeedback').className = 'feedback';
+
+            // Разблокируем кнопку проверки для нового раунда
+            const btn = document.getElementById('checkBonusBtn');
+            if (btn) btn.disabled = false;
         }
 
         function checkBonusConfig() {
+            // Предотвращение множественных кликов - блокируем кнопку сразу
+            const btn = document.getElementById('checkBonusBtn');
+            if (btn.disabled) return; // Уже проверяется, игнорируем повторный клик
+            btn.disabled = true;
+
             const userConfig = bonusEditor.getValue();
             const correctConfig = currentBonusLevel.bonusConfigFixed;
 
@@ -3822,7 +3831,7 @@ async function consumeEvents() {
             const normalize = (str) => str.trim().replace(/\s+/g, ' ');
 
             if (normalize(userConfig) === normalize(correctConfig)) {
-                // Правильно!
+                // Правильно! Кнопка остаётся заблокированной
                 document.getElementById('bonusFeedback').textContent =
                     `🎉 ОТЛИЧНО! Конфиг исправлен!`;
                 document.getElementById('bonusFeedback').className = 'feedback perfect';
@@ -3846,6 +3855,7 @@ async function consumeEvents() {
                 document.querySelector('.controls').classList.add('shake');
                 setTimeout(() => {
                     document.querySelector('.controls').classList.remove('shake');
+                    btn.disabled = false; // Разблокируем кнопку для повторной попытки
                 }, 500);
             }
         }
