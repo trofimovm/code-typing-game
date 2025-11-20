@@ -1018,7 +1018,7 @@
                 <div class="stat-value" id="timer">0.0</div>
             </div>
         </div>
-        <button id="finishBtn" class="finish-btn" onclick="finishGame()" style="display: none;">Завершить ❌</button>
+        <button id="finishBtn" class="finish-btn" onclick="finishGame()" style="display: none;">Завершить</button>
     </div>
 
     <div class="main-container">
@@ -1778,7 +1778,13 @@ async function consumeEvents() {
                 scrollBeyondLastLine: false,
                 lineNumbers: 'on',
                 renderLineHighlight: 'all',
-                automaticLayout: true
+                automaticLayout: true,
+                quickSuggestions: false,
+                parameterHints: { enabled: false },
+                suggestOnTriggerCharacters: false,
+                acceptSuggestionOnCommitCharacter: false,
+                tabCompletion: 'off',
+                wordBasedSuggestions: false
             });
 
             // Запретить вставку в редакторе
@@ -1787,7 +1793,22 @@ async function consumeEvents() {
                 editor.trigger('keyboard', 'undo');
             });
 
-            editor.onDidChangeModelContent(() => {
+            // Заблокировать Command Palette (F1)
+            editor.onKeyDown((e) => {
+                if (e.keyCode === monaco.KeyCode.F1) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            });
+
+            // Детекция подозрительного ввода
+            editor.onDidChangeModelContent((e) => {
+                // Проверка на массовые изменения (>50 символов за раз)
+                e.changes.forEach(change => {
+                    if (change.text.length > 50) {
+                        console.warn('⚠️ Обнаружена подозрительная активность: массовый ввод текста (' + change.text.length + ' символов). Пожалуйста, играйте честно!');
+                    }
+                });
                 checkCode();
             });
 
@@ -1802,6 +1823,12 @@ async function consumeEvents() {
                 lineNumbers: 'on',
                 renderLineHighlight: 'all',
                 automaticLayout: true
+            });
+
+            // Запретить вставку в бонусном редакторе
+            bonusEditor.onDidPaste((e) => {
+                e.preventDefault();
+                bonusEditor.trigger('keyboard', 'undo');
             });
 
             // Initialize drink icon as locked
