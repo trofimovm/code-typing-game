@@ -3067,7 +3067,6 @@ async function consumeEvents() {
         function showFinalScreen(timedOut = false, customMessage = null, isCheatDetected = false) {
             // Останавливаем игру
             isGameActive = false;
-            activityStartTime = 0;
             clearInterval(timerInterval);
             if (activityTimerInterval) clearInterval(activityTimerInterval);
 
@@ -3083,7 +3082,7 @@ async function consumeEvents() {
                 document.getElementById('finalRoundsCompleted').textContent = '0';
                 document.getElementById('finalTimeSpent').textContent = '0:00';
             } else {
-                // Calculate results
+                // Calculate results (BEFORE resetting activityStartTime)
                 let elapsedTime = activityStartTime > 0 ? Math.floor((Date.now() - activityStartTime) / 1000) : 0;
 
                 // If timed out automatically, cap at 10 minutes (600 seconds)
@@ -3111,6 +3110,9 @@ async function consumeEvents() {
                     document.getElementById('finalTitle').textContent = '🏗️ ТЕКИ LOW-КОДИНГ завершен!';
                 }
             }
+
+            // Reset activity timer (AFTER calculating elapsed time)
+            activityStartTime = 0;
 
             // Show final screen
             document.getElementById('finalScreen').classList.add('show');
