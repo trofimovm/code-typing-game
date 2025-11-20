@@ -3430,10 +3430,18 @@ async function consumeEvents() {
                             toType: targetType
                         });
                         redrawConnections();
-                        validateRealTime();
 
-                        document.getElementById('architectFeedback').textContent = `✓ Соединение создано: ${blockType} → ${targetType}`;
-                        document.getElementById('architectFeedback').className = 'feedback perfect';
+                        // Валидация корректности соединения
+                        if (!isConnectionValid(blockType, targetType)) {
+                            // Неправильное соединение - штрафуем попытку
+                            handleArchitectureError(`❌ Неправильное соединение: ${blockType} → ${targetType}`);
+                        } else {
+                            // Правильное соединение - показываем успех
+                            document.getElementById('architectFeedback').textContent = `✓ Соединение создано: ${blockType} → ${targetType}`;
+                            document.getElementById('architectFeedback').className = 'feedback perfect';
+                        }
+
+                        validateRealTime();
                     }
                 }
 
@@ -3482,6 +3490,17 @@ async function consumeEvents() {
                             toType: blockType
                         });
                         redrawConnections();
+
+                        // Валидация корректности соединения
+                        if (!isConnectionValid(selectedBlock.type, blockType)) {
+                            // Неправильное соединение - штрафуем попытку
+                            handleArchitectureError(`❌ Неправильное соединение: ${selectedBlock.type} → ${blockType}`);
+                        } else {
+                            // Правильное соединение - показываем успех
+                            document.getElementById('architectFeedback').textContent = `✓ Соединение создано: ${selectedBlock.type} → ${blockType}`;
+                            document.getElementById('architectFeedback').className = 'feedback perfect';
+                        }
+
                         validateRealTime();
                     }
                 }
@@ -3589,6 +3608,16 @@ async function consumeEvents() {
                     document.getElementById('architectFeedback').textContent = '';
                 }
             }, 1500);
+        }
+
+        // Проверка корректности соединения между блоками
+        function isConnectionValid(fromType, toType) {
+            const level = architectureLevels[currentRound - 1];
+            if (!level) return false;
+
+            return level.requiredConnections.some(
+                rc => rc.from === fromType && rc.to === toType
+            );
         }
 
         function deleteBlock(blockId) {
