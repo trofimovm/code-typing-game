@@ -3083,6 +3083,36 @@ async function consumeEvents() {
             penalties = [];
             updateAttemptsDisplay();
             startActivityTimer(10); // 10 minutes for the whole game
+
+            // Настройка canvas для приема блоков (один раз при старте игры)
+            const canvas = document.getElementById('canvas');
+            canvas.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+
+            canvas.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const blockType = e.dataTransfer.getData('blockType');
+                if (!blockType) return;
+
+                // Проверяем, нет ли уже такого блока на canvas
+                const alreadyExists = droppedBlocks.some(b => b.type === blockType);
+                if (alreadyExists) {
+                    document.getElementById('architectFeedback').textContent = `Блок "${blockType}" уже добавлен на canvas`;
+                    document.getElementById('architectFeedback').className = 'feedback error';
+                    setTimeout(() => {
+                        document.getElementById('architectFeedback').textContent = '';
+                    }, 2000);
+                    return;
+                }
+
+                const canvasRect = canvas.getBoundingClientRect();
+                const x = e.clientX - canvasRect.left - 60;
+                const y = e.clientY - canvasRect.top - 20;
+
+                addBlockToCanvas(blockType, x, y);
+            });
+
             nextArchitectLevel();
         }
 
@@ -3191,35 +3221,6 @@ async function consumeEvents() {
             const hintBtn = document.getElementById('hintBtn');
             if (clearBtn) clearBtn.disabled = false;
             if (hintBtn) hintBtn.disabled = false;
-
-            // Настройка canvas для приема блоков
-            const canvas = document.getElementById('canvas');
-            canvas.addEventListener('dragover', (e) => {
-                e.preventDefault();
-            });
-
-            canvas.addEventListener('drop', (e) => {
-                e.preventDefault();
-                const blockType = e.dataTransfer.getData('blockType');
-                if (!blockType) return;
-
-                // Проверяем, нет ли уже такого блока на canvas
-                const alreadyExists = droppedBlocks.some(b => b.type === blockType);
-                if (alreadyExists) {
-                    document.getElementById('architectFeedback').textContent = `Блок "${blockType}" уже добавлен на canvas`;
-                    document.getElementById('architectFeedback').className = 'feedback error';
-                    setTimeout(() => {
-                        document.getElementById('architectFeedback').textContent = '';
-                    }, 2000);
-                    return;
-                }
-
-                const canvasRect = canvas.getBoundingClientRect();
-                const x = e.clientX - canvasRect.left - 60;
-                const y = e.clientY - canvasRect.top - 20;
-
-                addBlockToCanvas(blockType, x, y);
-            });
 
             startTime = Date.now();
             // startTimer(); // Убрано: используется только обратный отсчёт от startActivityTimer()
