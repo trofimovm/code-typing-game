@@ -1148,6 +1148,7 @@
                     <div style="font-size: 28px; color: #ff0032; font-weight: bold; margin-bottom: 10px;">⚙️ ИСПРАВЬТЕ КОНФИГУРАЦИЮ!</div>
                     <div style="font-size: 16px; color: #666; margin-bottom: 8px;">Исправьте конфигурацию!</div>
                     <div id="bonusHint" style="font-size: 14px; color: #333; background: #fff9e6; padding: 10px; border-radius: 5px; border: 1px solid #ffd700;"></div>
+                    <div id="bonusAttemptsDisplay" style="margin-top: 8px; padding: 8px; background: #fff3cd; border: 2px solid #ffc107; border-radius: 5px; font-size: 13px; font-weight: bold; text-align: center;"></div>
                 </div>
 
                 <div style="border: 3px solid #ff0032; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(255, 0, 50, 0.15); margin-bottom: 15px;">
@@ -3085,21 +3086,39 @@ async function consumeEvents() {
 
         function updateAttemptsDisplay() {
             const display = document.getElementById('attemptsDisplay');
-            display.textContent = `⚠️ Попытки: ${attemptsRemaining}/5`;
+            const bonusDisplay = document.getElementById('bonusAttemptsDisplay');
 
-            // Change color based on remaining attempts
+            const text = `⚠️ Попытки: ${attemptsRemaining}/5`;
+
+            // Determine styles based on remaining attempts
+            let bgColor, borderColor, textColor;
             if (attemptsRemaining <= 1) {
-                display.style.background = '#f8d7da';
-                display.style.borderColor = '#dc3545';
-                display.style.color = '#721c24';
+                bgColor = '#f8d7da';
+                borderColor = '#dc3545';
+                textColor = '#721c24';
             } else if (attemptsRemaining <= 2) {
-                display.style.background = '#fff3cd';
-                display.style.borderColor = '#ffc107';
-                display.style.color = '#856404';
+                bgColor = '#fff3cd';
+                borderColor = '#ffc107';
+                textColor = '#856404';
             } else {
-                display.style.background = '#d1ecf1';
-                display.style.borderColor = '#17a2b8';
-                display.style.color = '#0c5460';
+                bgColor = '#d1ecf1';
+                borderColor = '#17a2b8';
+                textColor = '#0c5460';
+            }
+
+            // Update both displays with null-safe checks
+            if (display) {
+                display.textContent = text;
+                display.style.background = bgColor;
+                display.style.borderColor = borderColor;
+                display.style.color = textColor;
+            }
+
+            if (bonusDisplay) {
+                bonusDisplay.textContent = text;
+                bonusDisplay.style.background = bgColor;
+                bonusDisplay.style.borderColor = borderColor;
+                bonusDisplay.style.color = textColor;
             }
         }
 
