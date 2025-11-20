@@ -3103,6 +3103,43 @@ async function consumeEvents() {
             }
         }
 
+        // Обновление списка доступных блоков на основе уже размещенных
+        function updateAvailableBlocks() {
+            const level = architectureLevels[currentRound - 1];
+            if (!level) return;
+
+            const blocksContainer = document.getElementById('availableBlocks');
+            blocksContainer.innerHTML = '';
+
+            // Получаем список уже размещённых типов блоков
+            const placedTypes = droppedBlocks.map(b => b.type);
+
+            // Фильтруем: показываем только неиспользованные блоки
+            const unusedBlocks = level.availableBlocks.filter(
+                blockName => !placedTypes.includes(blockName)
+            );
+
+            // Рендерим только неиспользованные блоки
+            unusedBlocks.forEach(blockName => {
+                const blockEl = document.createElement('div');
+                blockEl.className = 'service-block';
+                blockEl.textContent = blockName;
+                blockEl.draggable = true;
+                blockEl.dataset.blockType = blockName;
+
+                blockEl.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('blockType', blockName);
+                    blockEl.classList.add('dragging');
+                });
+
+                blockEl.addEventListener('dragend', () => {
+                    blockEl.classList.remove('dragging');
+                });
+
+                blocksContainer.appendChild(blockEl);
+            });
+        }
+
         function nextArchitectLevel() {
             if (currentRound >= 7) {
                 endGame();
@@ -3126,26 +3163,7 @@ async function consumeEvents() {
             redrawConnections();
 
             // Заполнение доступных блоков
-            const blocksContainer = document.getElementById('availableBlocks');
-            blocksContainer.innerHTML = '';
-            level.availableBlocks.forEach(blockName => {
-                const blockEl = document.createElement('div');
-                blockEl.className = 'service-block';
-                blockEl.textContent = blockName;
-                blockEl.draggable = true;
-                blockEl.dataset.blockType = blockName;
-
-                blockEl.addEventListener('dragstart', (e) => {
-                    e.dataTransfer.setData('blockType', blockName);
-                    blockEl.classList.add('dragging');
-                });
-
-                blockEl.addEventListener('dragend', () => {
-                    blockEl.classList.remove('dragging');
-                });
-
-                blocksContainer.appendChild(blockEl);
-            });
+            updateAvailableBlocks();
 
             // Настройка canvas для приема блоков
             const canvas = document.getElementById('canvas');
@@ -3340,6 +3358,7 @@ async function consumeEvents() {
             });
 
             validateRealTime();
+            updateAvailableBlocks();
         }
 
         function startConnectionFromHandle(blockId, blockType, event) {
@@ -3591,6 +3610,7 @@ async function consumeEvents() {
             // Перерисовываем соединения
             redrawConnections();
             validateRealTime();
+            updateAvailableBlocks();
 
             document.getElementById('architectFeedback').textContent = `Блок "${block.type}" удален`;
             document.getElementById('architectFeedback').className = 'feedback';
