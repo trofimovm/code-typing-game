@@ -43,6 +43,17 @@ jobs:
               --content-type "text/html; charset=utf-8" || exit 1
           done
 
+          # Upload JSON data files
+          echo "Uploading JSON data files..."
+          if [ -f "bugs-data.json" ]; then
+            echo "  Uploading bugs-data.json..."
+            yc storage s3api put-object \
+              --bucket "$BUCKET_NAME" \
+              --key "bugs-data.json" \
+              --body "bugs-data.json" \
+              --content-type "application/json; charset=utf-8" || exit 1
+          fi
+
           # Upload ICO files (favicon)
           echo "Uploading ICO files..."
           for ico in *.ico; do
