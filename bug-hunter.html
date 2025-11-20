@@ -2217,7 +2217,7 @@ async function consumeEvents() {
                     document.getElementById('finalModeMessage').textContent = 'Победитель определяется по наибольшему количеству раундов';
                 } else if (gameMode === 'bugHunting') {
                     document.getElementById('finalTitle').textContent = '🐛 КОД-ХАНТИНГ завершен!';
-                    document.getElementById('finalModeMessage').textContent = `Отличная работа! Вы исправили ${roundsCompleted} ${roundsCompleted === 1 ? 'баг' : roundsCompleted < 5 ? 'бага' : 'багов'}!`;
+                    document.getElementById('finalModeMessage').textContent = `Отличная работа! Вы исправили ${roundsCompleted} ${roundsCompleted === 1 ? 'баг' : (roundsCompleted >= 2 && roundsCompleted <= 4) ? 'бага' : 'багов'}!`;
                 } else if (gameMode === 'architect') {
                     document.getElementById('finalTitle').textContent = '🏗️ Cloud Architect завершен!';
                     document.getElementById('finalModeMessage').textContent = `Пройдено уровней: ${roundsCompleted}/7`;
