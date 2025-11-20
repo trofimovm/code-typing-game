@@ -3384,8 +3384,17 @@ async function consumeEvents() {
                 element: blockEl
             });
 
-            validateRealTime();
+            // Показываем зелёное сообщение об успешном добавлении
+            document.getElementById('architectFeedback').textContent = `Блок "${blockType}" добавлен на canvas`;
+            document.getElementById('architectFeedback').className = 'feedback perfect';
+
+            // Обновляем доступные блоки сразу
             updateAvailableBlocks();
+
+            // Запускаем валидацию через 1 сек, чтобы пользователь увидел зелёное сообщение
+            setTimeout(() => {
+                validateRealTime();
+            }, 1000);
         }
 
         function startConnectionFromHandle(blockId, blockType, event) {
