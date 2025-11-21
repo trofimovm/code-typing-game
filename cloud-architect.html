@@ -2318,7 +2318,7 @@ async function consumeMessages() {
                 name: "Уровень 5: Production инфраструктура",
                 description: "100K пользователей! Нужна отказоустойчивая инфраструктура с балансировкой нагрузки",
                 requirements: "High Availability: Load Balancer, несколько Backend серверов, общий Cache (Redis)",
-                availableBlocks: ['Frontend', 'Load Balancer', 'Backend API', 'Backend API 2', 'Redis', 'Database', 'RabbitMQ', 'Worker', 'Monitoring', 'Logging', 'CDN'],
+                availableBlocks: ['Load Balancer', 'Backend API', 'Backend API 2', 'Redis', 'Database'],
                 requiredBlocks: ['Load Balancer', 'Backend API', 'Backend API 2', 'Redis', 'Database'],
                 requiredConnections: [
                     {from: 'Load Balancer', to: 'Backend API'},
