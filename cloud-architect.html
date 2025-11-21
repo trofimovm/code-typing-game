@@ -2542,7 +2542,7 @@ async function consumeEvents() {
     }
   });
 }`,
-                bonusConfigHint: "🎯 Жестко указана partition: 0. Kafka сам распределит по ключу!",
+                bonusConfigHint: "🎯 В объекте messages найдите строку 'partition: 0' и удалите её полностью. Kafka автоматически распределит сообщения по ключу order.id",
                 bonusConfigLanguage: "javascript"
             }
         ];
