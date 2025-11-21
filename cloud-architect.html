@@ -1064,7 +1064,7 @@
                     <p style="margin: 0 0 12px 0; color: #2c3e50; font-size: 15px; line-height: 1.6;"><strong style="color: #495057;">⏱ Время:</strong> 5 минут на всю игру</p>
                     <p style="margin: 0 0 12px 0; color: #2c3e50; font-size: 15px; line-height: 1.6;"><strong style="color: #495057;">🎯 Цель:</strong> Пройти все 7 уровней архитектуры</p>
                     <p style="margin: 0 0 12px 0; color: #2c3e50; font-size: 15px; line-height: 1.6;"><strong style="color: #495057;">🔢 Уровни:</strong> 7 архитектурных задач + конфигурации</p>
-                    <p style="margin: 0; color: #2c3e50; font-size: 15px; line-height: 1.6;"><strong style="color: #dc3545;">⚠️ Лимит:</strong> <span style="color: #dc3545; font-weight: 600;">Всего 5 попыток на всю игру!</span></p>
+                    <p style="margin: 0; color: #2c3e50; font-size: 15px; line-height: 1.6;"><strong style="color: #dc3545;">⚠️ Лимит:</strong> <span style="color: #dc3545; font-weight: 600;">Всего 10 попыток на всю игру!</span></p>
                 </div>
 
                 <div style="margin: 0 0 25px 0;">
@@ -1103,7 +1103,7 @@
                     <ul style="margin: 0; padding-left: 24px; color: #155724; line-height: 1.8; text-align: left;">
                         <li style="margin: 0 0 10px 0; font-size: 15px;">Штрафы считаются ЗА ОБА типа раундов (архитектура + конфиги)</li>
                         <li style="margin: 0 0 10px 0; font-size: 15px;">Каждый раунд конфигурации ОБЯЗАТЕЛЕН - пропустить нельзя!</li>
-                        <li style="margin: 0 0 10px 0; font-size: 15px;">Для победы нужно пройти все 7 уровней за 5 попыток</li>
+                        <li style="margin: 0 0 10px 0; font-size: 15px;">Для победы нужно пройти все 7 уровней за 10 попыток</li>
                         <li style="margin: 0; font-size: 15px; font-weight: 600; color: #dc3545;">🚫 ЗАПРЕЩЕНО использовать DevTools и вставлять текст (Ctrl+V). При попытке игра моментально завершится и весь прогресс будет потерян!</li>
                     </ul>
                 </div>
@@ -2260,14 +2260,12 @@ deploy_app:
                 description: "10000 пользователей онлайн! Тяжелые задачи замедляют API. Внедрите очереди сообщений",
                 requirements: "Message Queue разгрузит Backend: долгие задачи обрабатывают Worker'ы асинхронно",
                 availableBlocks: ['Frontend', 'Backend API', 'Database', 'RabbitMQ', 'Worker', 'Notifications', 'Redis', 'Monitoring'],
-                requiredBlocks: ['Frontend', 'Backend API', 'Database', 'RabbitMQ', 'Worker', 'Notifications'],
+                requiredBlocks: ['Frontend', 'Backend API', 'Database', 'RabbitMQ', 'Worker'],
                 requiredConnections: [
                     {from: 'Frontend', to: 'Backend API'},
                     {from: 'Backend API', to: 'Database'},
                     {from: 'Backend API', to: 'RabbitMQ'},
-                    {from: 'RabbitMQ', to: 'Worker'},
-                    {from: 'Worker', to: 'Database'},
-                    {from: 'Worker', to: 'Notifications'}
+                    {from: 'RabbitMQ', to: 'Worker'}
                 ],
                 difficulty: 2.5,
                 hint: "💡 Backend быстро отвечает пользователю и ставит задачу в очередь. Worker забирает задачи и обрабатывает фоном",
@@ -2340,19 +2338,17 @@ async function consumeMessages() {
             },
             {
                 name: "Уровень 5: Production инфраструктура",
-                description: "100K пользователей! Нужна отказоустойчивая инфраструктура с балансировкой и мониторингом",
-                requirements: "High Availability: Load Balancer, несколько Backend серверов, общий Cache, мониторинг всего",
+                description: "100K пользователей! Нужна отказоустойчивая инфраструктура с балансировкой нагрузки",
+                requirements: "High Availability: Load Balancer, несколько Backend серверов, общий Cache (Redis)",
                 availableBlocks: ['Frontend', 'Load Balancer', 'Backend API', 'Backend API 2', 'Redis', 'Database', 'RabbitMQ', 'Worker', 'Monitoring', 'Logging', 'CDN'],
-                requiredBlocks: ['Load Balancer', 'Backend API', 'Backend API 2', 'Redis', 'Database', 'Monitoring'],
+                requiredBlocks: ['Load Balancer', 'Backend API', 'Backend API 2', 'Redis', 'Database'],
                 requiredConnections: [
                     {from: 'Load Balancer', to: 'Backend API'},
                     {from: 'Load Balancer', to: 'Backend API 2'},
                     {from: 'Backend API', to: 'Redis'},
                     {from: 'Backend API', to: 'Database'},
                     {from: 'Backend API 2', to: 'Redis'},
-                    {from: 'Backend API 2', to: 'Database'},
-                    {from: 'Monitoring', to: 'Backend API'},
-                    {from: 'Monitoring', to: 'Backend API 2'}
+                    {from: 'Backend API 2', to: 'Database'}
                 ],
                 difficulty: 3,
                 hint: "💡 Load Balancer распределяет нагрузку между серверами. Если один упадет - второй продолжит работу. Все шарят Cache",
@@ -2410,19 +2406,16 @@ server {
             {
                 name: "Уровень 6: Микросервисная архитектура",
                 description: "Монолит больше не масштабируется! Разбейте систему на микросервисы с API Gateway",
-                requirements: "API Gateway → User Service, Product Service, Order Service. Каждый со своей БД!",
+                requirements: "API Gateway маршрутизирует запросы к User Service, Product Service, Order Service",
                 availableBlocks: ['API Gateway', 'User Service', 'Product Service', 'Order Service', 'User DB', 'Product DB', 'Order DB', 'Redis', 'Message Bus'],
-                requiredBlocks: ['API Gateway', 'User Service', 'Product Service', 'Order Service', 'User DB', 'Product DB', 'Order DB'],
+                requiredBlocks: ['API Gateway', 'User Service', 'Product Service', 'Order Service'],
                 requiredConnections: [
                     {from: 'API Gateway', to: 'User Service'},
                     {from: 'API Gateway', to: 'Product Service'},
-                    {from: 'API Gateway', to: 'Order Service'},
-                    {from: 'User Service', to: 'User DB'},
-                    {from: 'Product Service', to: 'Product DB'},
-                    {from: 'Order Service', to: 'Order DB'}
+                    {from: 'API Gateway', to: 'Order Service'}
                 ],
                 difficulty: 3.5,
-                hint: "💡 Каждый микросервис независим со своей базой. API Gateway - единая точка входа, маршрутизирует запросы",
+                hint: "💡 API Gateway - единая точка входа, маршрутизирует запросы к независимым микросервисам",
                 bonusConfigBuggy: `{
   "routes": [
     {
@@ -2483,13 +2476,12 @@ server {
                 description: "1M событий в секунду! Постройте реактивную систему на событиях с Kafka",
                 requirements: "Сервисы общаются через события: Event Producer → Kafka → Event Consumers (независимые сервисы)",
                 availableBlocks: ['Frontend', 'API Gateway', 'Order Service', 'Payment Service', 'Inventory Service', 'Notification Service', 'Kafka', 'Database', 'Analytics', 'Monitoring'],
-                requiredBlocks: ['API Gateway', 'Order Service', 'Kafka', 'Payment Service', 'Inventory Service', 'Notification Service'],
+                requiredBlocks: ['API Gateway', 'Order Service', 'Kafka', 'Payment Service', 'Inventory Service'],
                 requiredConnections: [
                     {from: 'API Gateway', to: 'Order Service'},
                     {from: 'Order Service', to: 'Kafka'},
                     {from: 'Kafka', to: 'Payment Service'},
-                    {from: 'Kafka', to: 'Inventory Service'},
-                    {from: 'Kafka', to: 'Notification Service'}
+                    {from: 'Kafka', to: 'Inventory Service'}
                 ],
                 difficulty: 4,
                 hint: "💡 Order Service публикует событие в Kafka. Все подписанные сервисы реагируют независимо и асинхронно",
@@ -2590,7 +2582,7 @@ async function consumeEvents() {
         let activityStartTime = 0;
         let isGameActive = false; // Флаг активности игры для anti-cheat
         let activityTimerInterval = null;
-        let attemptsRemaining = 5; // For Cloud Architect
+        let attemptsRemaining = 10; // For Cloud Architect
         let penalties = []; // Penalty history for Cloud Architect
 
         // Cloud Architect game state
@@ -3059,7 +3051,7 @@ async function consumeEvents() {
             document.getElementById('startScreen').style.display = 'flex';
             document.getElementById('finishBtn').style.display = 'none';
             currentRound = 0;
-            attemptsRemaining = 5;
+            attemptsRemaining = 10;
             penalties = [];
         }
 
@@ -3080,7 +3072,7 @@ async function consumeEvents() {
             document.getElementById('finishBtn').style.display = 'block';
             currentRound = 0;
             roundsCompleted = 0;
-            attemptsRemaining = 5;
+            attemptsRemaining = 10;
             penalties = [];
             updateAttemptsDisplay();
             startActivityTimer(5); // 5 minutes for the whole game
