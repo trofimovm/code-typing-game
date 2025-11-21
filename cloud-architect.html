@@ -2230,7 +2230,7 @@ deploy_app:
     - docker push myapp:latest
   only:
     - main`,
-                bonusConfigHint: "🎯 Deploy запускается для ветки develop, а тесты для main. Нужна синхронизация!",
+                bonusConfigHint: "🎯 В deploy_app ветка 'develop', но должна быть 'main' (как в test_app). Измените 'only: - develop' на 'only: - main'",
                 bonusConfigLanguage: "yaml"
             },
             {
