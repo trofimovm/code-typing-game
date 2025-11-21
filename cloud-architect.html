@@ -2759,7 +2759,7 @@ async function consumeEvents() {
             document.getElementById('codeLabel').textContent = 'Напечатайте этот код:';
             document.getElementById('bugDescription').style.display = 'none';
             currentRound = 0;
-            startActivityTimer(10); // 10 minutes for testing
+            startActivityTimer(5); // 5 minutes
             nextRound();
         }
 
@@ -2793,7 +2793,7 @@ async function consumeEvents() {
             document.getElementById('codeLabel').textContent = 'Баг в этом коде:';
             document.getElementById('bugDescription').style.display = 'block';
             currentRound = 0;
-            startActivityTimer(10); // 10 minutes for testing
+            startActivityTimer(5); // 5 minutes
             nextRound();
         }
 
@@ -3083,7 +3083,7 @@ async function consumeEvents() {
             attemptsRemaining = 5;
             penalties = [];
             updateAttemptsDisplay();
-            startActivityTimer(10); // 10 minutes for the whole game
+            startActivityTimer(5); // 5 minutes for the whole game
 
             // Настройка canvas для приема блоков (один раз при старте игры)
             const canvas = document.getElementById('canvas');
