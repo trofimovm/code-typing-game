@@ -2311,7 +2311,7 @@ async function consumeMessages() {
     channel.ack(msg);
   });
 }`,
-                bonusConfigHint: "🎯 Prefetch в конфиге 10, а используется 1. Worker может обрабатывать больше!",
+                bonusConfigHint: "🎯 Строка 'channel.prefetch(1)' использует хардкод. Замените на 'channel.prefetch(config.prefetch)' чтобы использовать значение 10 из конфига",
                 bonusConfigLanguage: "javascript"
             },
             {
