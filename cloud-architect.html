@@ -2192,7 +2192,7 @@ services:
                 name: "Уровень 3: CI/CD конвейер",
                 description: "Команда выросла до 10 разработчиков. Автоматизируйте процесс от коммита до production!",
                 requirements: "Постройте непрерывный pipeline: Git → Сборка → Тесты → Docker образ → Автодеплой",
-                availableBlocks: ['Git Repo', 'Build', 'Test', 'Docker Registry', 'Deploy', 'Monitoring', 'Production'],
+                availableBlocks: ['Git Repo', 'Build', 'Test', 'Docker Registry', 'Deploy'],
                 requiredBlocks: ['Git Repo', 'Build', 'Test', 'Docker Registry', 'Deploy'],
                 requiredConnections: [
                     {from: 'Git Repo', to: 'Build'},
@@ -2201,7 +2201,7 @@ services:
                     {from: 'Docker Registry', to: 'Deploy'}
                 ],
                 difficulty: 2,
-                hint: "💡 GitOps подход: каждый git push запускает сборку, прогоняет тесты, собирает Docker образ и деплоит если всё ОК",
+                hint: "💡 Линейный конвейер: Git Repo → Build → Test → Docker Registry → Deploy. Каждый этап следует один за другим",
                 bonusConfigBuggy: `stages:
   - build
   - test
@@ -2259,7 +2259,7 @@ deploy_app:
                 name: "Уровень 4: Асинхронная обработка",
                 description: "10000 пользователей онлайн! Тяжелые задачи замедляют API. Внедрите очереди сообщений",
                 requirements: "Message Queue разгрузит Backend: долгие задачи обрабатывают Worker'ы асинхронно",
-                availableBlocks: ['Frontend', 'Backend API', 'Database', 'RabbitMQ', 'Worker', 'Notifications', 'Redis', 'Monitoring'],
+                availableBlocks: ['Frontend', 'Backend API', 'Database', 'RabbitMQ', 'Worker'],
                 requiredBlocks: ['Frontend', 'Backend API', 'Database', 'RabbitMQ', 'Worker'],
                 requiredConnections: [
                     {from: 'Frontend', to: 'Backend API'},
@@ -2268,7 +2268,7 @@ deploy_app:
                     {from: 'RabbitMQ', to: 'Worker'}
                 ],
                 difficulty: 2.5,
-                hint: "💡 Backend быстро отвечает пользователю и ставит задачу в очередь. Worker забирает задачи и обрабатывает фоном",
+                hint: "💡 Frontend → Backend → Database (основной поток). Backend → RabbitMQ → Worker (асинхронные задачи)",
                 bonusConfigBuggy: `const amqp = require('amqplib');
 
 const config = {
