@@ -2385,7 +2385,7 @@ server {
                 name: "Уровень 6: Микросервисная архитектура",
                 description: "Монолит больше не масштабируется! Разбейте систему на микросервисы с API Gateway",
                 requirements: "API Gateway маршрутизирует запросы к User Service, Product Service, Order Service",
-                availableBlocks: ['API Gateway', 'User Service', 'Product Service', 'Order Service', 'User DB', 'Product DB', 'Order DB', 'Redis', 'Message Bus'],
+                availableBlocks: ['API Gateway', 'User Service', 'Product Service', 'Order Service'],
                 requiredBlocks: ['API Gateway', 'User Service', 'Product Service', 'Order Service'],
                 requiredConnections: [
                     {from: 'API Gateway', to: 'User Service'},
@@ -2393,7 +2393,7 @@ server {
                     {from: 'API Gateway', to: 'Order Service'}
                 ],
                 difficulty: 3.5,
-                hint: "💡 API Gateway - единая точка входа, маршрутизирует запросы к независимым микросервисам",
+                hint: "💡 Gateway работает как входная дверь - от него нужны пути к каждому из трёх сервисов. Форма: звезда с центром в Gateway",
                 bonusConfigBuggy: `{
   "routes": [
     {
